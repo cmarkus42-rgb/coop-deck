@@ -970,7 +970,9 @@ export class Deck extends EventEmitter {
           return ok(t(lage?.laeuft ? 'befehl.dienstLaeuft' : 'befehl.dienstStartetNicht', { name: g.dienst.name, adresse: g.dienst.url }))
         }
         if (!alle.length) return ok(t('befehl.keineDienste'))
-        const zeilen = await Promise.all(alle.map(async (g) => `${g.dienst.name}\t${(await erreichbar(g.dienst.url)) ? t('befehl.dienst.laeuft') : this.projekte.dienstFreigegeben(g.projekt, g.dienst) ? t('befehl.dienst.steht') : t('befehl.dienst.unbestaetigt')}\t${g.dienst.url}\t${g.dienst.hilfe ?? ''}\t${g.projekt.name}\t${g.dienst.zweck ?? ''}`))
+        // Dieselbe Kürzung wie im Briefing: einzeilig, begrenzt, ohne Auszeichnung.
+        const eins = (s: string | undefined, n: number) => kurz((s ?? '').replace(/[\s`]+/g, ' ').trim(), n)
+        const zeilen = await Promise.all(alle.map(async (g) => `${eins(g.dienst.name, 60)}\t${(await erreichbar(g.dienst.url)) ? t('befehl.dienst.laeuft') : this.projekte.dienstFreigegeben(g.projekt, g.dienst) ? t('befehl.dienst.steht') : t('befehl.dienst.unbestaetigt')}\t${eins(g.dienst.url, 120)}\t${eins(g.dienst.hilfe, 160)}\t${eins(g.projekt.name, 60)}\t${eins(g.dienst.zweck, 200)}`))
         return ok(zeilen.join('\n'))
       }
       case 'melden': {

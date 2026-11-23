@@ -293,6 +293,7 @@ export class Projekte {
 function dienstSchluessel(p: Projekt, d: Dienst): string {
   // Bei einem gemeinsamen Dienst gehört zur Bestätigung auch, was die Briefings aller Sessions über ihn sagen:
   // ändert ein Projekt diese Angaben, gilt die Bestätigung nicht mehr.
-  const gemeinsam = d.gemeinsam ? `\ngemeinsam\n${d.url}\n${d.zweck ?? ''}\n${d.hilfe ?? ''}` : ''
+  // Dazu zählen auch der Name des Dienstes und der des Projekts: beide stehen in der Zeile und kommen aus dem Projekt.
+  const gemeinsam = d.gemeinsam ? `\ngemeinsam\n${d.name}\n${p.name}\n${d.url}\n${d.zweck ?? ''}\n${d.hilfe ?? ''}` : ''
   return crypto.createHash('sha1').update(`${p.pfad}\n${d.start}${gemeinsam}`).digest('hex')
 }
