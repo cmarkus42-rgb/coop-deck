@@ -26,6 +26,12 @@ export interface Dienst {
   name: string
   start: string
   url: string
+  /** Der Dienst steht den Sessions aller Projekte offen: ihr Briefing nennt ihn, sobald er bestätigt ist. */
+  gemeinsam?: boolean
+  /** Wozu er taugt, ein Satz; steht im Briefing. */
+  zweck?: string
+  /** Wo eine Session nachliest, wie man ihn benutzt: eine Adresse des Dienstes. */
+  hilfe?: string
 }
 
 export interface ProjektDatei {
@@ -285,5 +291,8 @@ export class Projekte {
 }
 
 function dienstSchluessel(p: Projekt, d: Dienst): string {
-  return crypto.createHash('sha1').update(`${p.pfad}\n${d.start}`).digest('hex')
+  // Bei einem gemeinsamen Dienst gehört zur Bestätigung auch, was die Briefings aller Sessions über ihn sagen:
+  // ändert ein Projekt diese Angaben, gilt die Bestätigung nicht mehr.
+  const gemeinsam = d.gemeinsam ? `\ngemeinsam\n${d.url}\n${d.zweck ?? ''}\n${d.hilfe ?? ''}` : ''
+  return crypto.createHash('sha1').update(`${p.pfad}\n${d.start}${gemeinsam}`).digest('hex')
 }

@@ -27,7 +27,7 @@ The screenshots show a demo project, with a plain terminal standing in for a CLI
 ## What is in it
 
 - **Sessions** run in tmux on their own server, so they survive closing the window. Each session gets a briefing with the project sheet, the artifacts of the project and the rules for working together. The CLIs report by themselves whether they are working, done or waiting for approval; for pi this is the least tested.
-- **Artifact types**: roadmap, project sheet, questionnaire, variant selection, review, handover, document. Typed artifacts separate data from presentation, so the agent edits a small JSON or Markdown file and never the view. Free HTML pages and local services of a project (a dev server, a viewer) sit next to them as tabs.
+- **Artifact types**: roadmap, project sheet, questionnaire, variant selection, review, handover, document. Typed artifacts separate data from presentation, so the agent edits a small JSON or Markdown file and never the view. Free HTML pages and local services of a project (a dev server, a viewer) sit next to them as tabs. A project can offer one of its services to all projects; once you confirm it, every session learns about it in its briefing.
 - **Roadmap with sessions**: every item has an ID that never changes, acceptance criteria and a status. A session can be started on an item and gets that item in its briefing.
 - **Feedback** with numbered marks on any view, sent to a session as readable text; a history per artifact with before and after.
 - **Inbox** across all projects: sessions that are done or need approval, open questions, notes.
@@ -114,6 +114,7 @@ coop hinweis "<text>" [--artefakt <id>] [--ref <reference>]
 coop frage "<title>" --option "A::Title::Explanation" … [--warten]
 coop bild <artifact|url>
 coop melden "<one or two sentences>"
+coop dienst liste | starte <name>
 coop anfordern "<what you need>" [--art foto|ton|beides] [--warten]
 coop roadmap liste | zeige R-3 | status R-3 in-arbeit --notiz "…" | neu "<title>"
 coop uebergabe "<state>" --offen "…" --naechster "…"

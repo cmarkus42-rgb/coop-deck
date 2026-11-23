@@ -154,6 +154,8 @@ export const de = {
   'ui.fuss.autostart.neu': 'neue Session starten',
   'ui.fuss.autostart.fortsetzen': 'letzte fortsetzen',
   'ui.fuss.cliTitel': 'CLI, mit der neue Sessions in diesem Projekt starten',
+  'ui.fuss.dienstGemeinsam': 'Allen Projekten angeboten',
+  'ui.fuss.dienstUnbestaetigt': 'Soll allen Projekten angeboten werden: anklicken und bestätigen',
   'ui.fuss.cliFehlt': ' (fehlt)',
   'ui.fuss.keinProjekt': 'Kein Projekt geöffnet',
 
@@ -235,12 +237,17 @@ export const de = {
   'ui.dd.text': 'Ein Dienst ist eine lokale Anwendung des Projekts, etwa ein Dev-Server oder das CAD-Cockpit. Das Deck startet ihn beim Öffnen des Projekts, sobald du den Startbefehl einmal bestätigt hast.',
   'ui.dd.start': 'Startbefehl (läuft im Projektverzeichnis; leer, wenn der Dienst anderswo gestartet wird)',
   'ui.dd.hinterlegen': 'Hinterlegen',
+  'ui.dd.gemeinsam': 'Allen Projekten anbieten: das Briefing jeder Session nennt den Dienst, sobald du ihn bestätigt hast',
+  'ui.dd.zweck': 'Wozu er taugt, in einem Satz (steht im Briefing)',
+  'ui.dd.hilfe': 'Adresse, unter der eine Session nachliest, wie man ihn benutzt (freiwillig)',
+  'ui.ds.gemeinsam': 'Der Dienst wird allen Projekten angeboten. Mit deiner Bestätigung steht diese Zeile im Briefing jeder neuen Session:',
   'ui.ds.titel': '„{name}“ starten?',
   'ui.ds.text': 'Dieser Befehl läuft im Projektverzeichnis. Nach deiner Bestätigung startet das Deck ihn künftig von selbst, solange er unverändert bleibt.',
   'ui.ds.keinBefehl': '(kein Startbefehl hinterlegt — der Dienst wird nur geprüft)',
   'ui.ds.nicht': 'Nicht starten',
   'ui.ds.startet': 'Startet …',
   'ui.ds.ja': 'Bestätigen und starten',
+  'ui.ds.jaOhneStart': 'Bestätigen',
 
   // --- Einstellungen
   'ui.einst.sprache': 'Sprache der Oberfläche',
@@ -451,6 +458,8 @@ export const en: Record<keyof typeof de, string> = {
   'ui.fuss.autostart.neu': 'start a new session',
   'ui.fuss.autostart.fortsetzen': 'resume the last one',
   'ui.fuss.cliTitel': 'CLI that new sessions in this project start with',
+  'ui.fuss.dienstGemeinsam': 'Offered to all projects',
+  'ui.fuss.dienstUnbestaetigt': 'To be offered to all projects: click and confirm',
   'ui.fuss.cliFehlt': ' (missing)',
   'ui.fuss.keinProjekt': 'No project open',
 
@@ -532,12 +541,17 @@ export const en: Record<keyof typeof de, string> = {
   'ui.dd.text': 'A service is a local application of the project, such as a dev server or the CAD cockpit. The deck starts it when the project opens, once you have confirmed the start command.',
   'ui.dd.start': 'Start command (runs in the project directory; empty if the service is started elsewhere)',
   'ui.dd.hinterlegen': 'Add',
+  'ui.dd.gemeinsam': 'Offer to all projects: the briefing of every session names the service once you have confirmed it',
+  'ui.dd.zweck': 'What it is good for, in one sentence (appears in the briefing)',
+  'ui.dd.hilfe': 'Address where a session reads how to use it (optional)',
+  'ui.ds.gemeinsam': 'The service is offered to all projects. Once you confirm, this line appears in the briefing of every new session:',
   'ui.ds.titel': 'Start “{name}”?',
   'ui.ds.text': 'This command runs in the project directory. Once you confirm, the deck starts it on its own from then on, as long as it stays unchanged.',
   'ui.ds.keinBefehl': '(no start command set — the service is only checked)',
   'ui.ds.nicht': 'Do not start',
   'ui.ds.startet': 'Starting…',
   'ui.ds.ja': 'Confirm and start',
+  'ui.ds.jaOhneStart': 'Confirm',
 
   // --- Settings
   'ui.einst.sprache': 'Interface language',

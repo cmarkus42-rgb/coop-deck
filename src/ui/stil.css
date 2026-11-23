@@ -290,3 +290,7 @@ select.feld { padding: 4px 6px; }
 .projekt .blende { font-family: 'Atkinson Next', system-ui, sans-serif; color: var(--kante-stark); background: none; border: 0; cursor: pointer; padding: 0 4px; visibility: hidden; }
 .projekt:hover .blende { visibility: visible; }
 .projekt .blende:hover { color: var(--text); }
+
+/* Dienste, die allen Projekten offenstehen; unbestätigte fallen auf, bis der Mensch sie bestätigt. */
+.fuss .dienst.gemeinsam { color: var(--mint); }
+.fuss .dienst.unbestaetigt { color: var(--gelb); text-decoration: underline dotted; }

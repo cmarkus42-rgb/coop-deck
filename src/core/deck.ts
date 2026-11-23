@@ -68,6 +68,9 @@ export interface DienstZustand {
   name: string
   url: string
   start: string
+  gemeinsam: boolean
+  zweck: string
+  hilfe: string
   laeuft: boolean
   freigegeben: boolean
   vonUns: boolean
@@ -431,6 +434,13 @@ export class Deck extends EventEmitter {
     // Nur nennen, was geht: ohne eingeschalteten Zugang gibt es niemanden, der liefert.
     if (this.mobilEinstellung().an) z.push(t('briefing.anfordern', { name: nutzer() }))
     z.push(t(tg.eingerichtet(this.einstellungen.get().telegram) ? 'briefing.meldenTelegram' : 'briefing.melden', { name: nutzer() }))
+    const dienste = this.gemeinsameDienste()
+    if (dienste.length) {
+      z.push('', t('briefing.dienste', { name: nutzer() }))
+      // Eine Zeile je Dienst, aus kurzen, einzeiligen Angaben: kein Projekt schreibt hier Absätze in fremde Briefings.
+      const eins = (s: string | undefined, n: number) => kurz((s ?? '').replace(/[\s`]+/g, ' ').trim(), n)
+      for (const { projekt, dienst: d } of dienste) z.push(t(d.hilfe ? 'briefing.dienstMitHilfe' : 'briefing.dienst', { dienst: eins(d.name, 60), zweck: eins(d.zweck, 200) || '—', adresse: eins(d.url, 120), hilfe: eins(d.hilfe, 160), projekt: eins(projekt.name, 60) }))
+    }
     z.push('', t('briefing.mcp'))
     z.push('', t('briefing.rueckmeldung', { name: nutzer() }))
     z.push('', t('briefing.typisiert'))
@@ -832,16 +842,31 @@ export class Deck extends EventEmitter {
     const p = this.projekt(pid)
     const ds = this.projekte.datei(p).dienste
     return Promise.all(ds.map(async (d) => ({
-      name: d.name, url: d.url, start: d.start,
+      name: d.name, url: d.url, start: d.start, gemeinsam: !!d.gemeinsam, zweck: d.zweck ?? '', hilfe: d.hilfe ?? '',
       laeuft: await erreichbar(d.url),
       freigegeben: this.projekte.dienstFreigegeben(p, d),
       vonUns: this.dienstProzesse.has(`${p.id}:${d.name}`),
     })))
   }
 
+  /**
+   * Dienste, die allen Projekten offenstehen: von einem Projekt als gemeinsam hinterlegt und vom Menschen bestätigt.
+   * Ohne Bestätigung nennt kein Briefing sie: was ein Projekt über sich schreibt, ist fremder Inhalt (V10).
+   */
+  gemeinsameDienste(): { projekt: Projekt; dienst: Dienst }[] {
+    const aus: { projekt: Projekt; dienst: Dienst }[] = []
+    for (const p of this.projekte.liste()) {
+      if (!p.hatCoop) continue
+      for (const d of this.projekte.datei(p).dienste) if (d.gemeinsam && this.projekte.dienstFreigegeben(p, d)) aus.push({ projekt: p, dienst: d })
+    }
+    return aus
+  }
+
   dienstSpeichern(pid: string, d: Dienst): void {
     const p = this.projekt(pid)
     const datei = this.projekte.datei(p)
+    const zeile = (s: string | undefined, n: number) => kurz((s ?? '').replace(/\s+/g, ' ').trim(), n) || undefined
+    d = { name: d.name, start: d.start, url: d.url, ...(d.gemeinsam ? { gemeinsam: true, zweck: zeile(d.zweck, 200), hilfe: /^https?:\/\/\S+$/.test(d.hilfe?.trim() ?? '') ? d.hilfe!.trim() : undefined } : {}) }
     datei.dienste = [...datei.dienste.filter((x) => x.name !== d.name), d]
     this.projekte.dateiSchreiben(p, datei)
   }
@@ -933,6 +958,20 @@ export class Deck extends EventEmitter {
         this.emit('frage', p.id, frage)
         this.emit('eingang')
         return { code: 0, aus: t(flag('warten') !== undefined ? 'befehl.frageWartet' : 'befehl.frageGestellt', { id: frage.id }), warteAuf: flag('warten') !== undefined ? datei : undefined }
+      }
+      case 'dienst': {
+        const eigene = this.projekte.datei(p).dienste.map((d) => ({ projekt: p, dienst: d }))
+        const alle = [...eigene, ...this.gemeinsameDienste().filter((g) => g.projekt.id !== p.id)]
+        if (rest[0] === 'starte' && rest[1]) {
+          const g = alle.find((x) => x.dienst.name === rest[1])
+          if (!g) throw new Error(t('dienst.fehlt', { name: rest[1] }))
+          // Gestartet wird nur, was der Mensch am Deck schon bestätigt hat (SI-07); eine Session bestätigt nichts.
+          const lage = (await this.dienstStarten(g.projekt.id, g.dienst.name, false)).find((x) => x.name === g.dienst.name)
+          return ok(t(lage?.laeuft ? 'befehl.dienstLaeuft' : 'befehl.dienstStartetNicht', { name: g.dienst.name, adresse: g.dienst.url }))
+        }
+        if (!alle.length) return ok(t('befehl.keineDienste'))
+        const zeilen = await Promise.all(alle.map(async (g) => `${g.dienst.name}\t${(await erreichbar(g.dienst.url)) ? t('befehl.dienst.laeuft') : this.projekte.dienstFreigegeben(g.projekt, g.dienst) ? t('befehl.dienst.steht') : t('befehl.dienst.unbestaetigt')}\t${g.dienst.url}\t${g.dienst.hilfe ?? ''}\t${g.projekt.name}\t${g.dienst.zweck ?? ''}`))
+        return ok(zeilen.join('\n'))
       }
       case 'melden': {
         if (!rest[0]?.trim()) throw new Error(t('befehl.meldenAufruf'))

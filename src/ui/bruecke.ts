@@ -3,7 +3,7 @@
 export interface Projekt { id: string; pfad: string; name: string; favorit: boolean; ausgeblendet: boolean; zuletzt: number; cli: string; autostart: 'neu' | 'fortsetzen' | 'nein'; hatCoop: boolean }
 export interface Artefakt { id: string; titel: string; typ: string; adresse: string; url?: string; quelle?: string }
 export interface Sitzung { id: string; projektId: string; art: 'cli' | 'terminal'; cli: string | null; titel: string; zweck?: string; roadmap?: { artefakt: string; punkt: string }; erstellt: number; aktiv: number; zustand: 'arbeitet' | 'ruhig' | 'wartet' | 'beendet'; achtung?: 'fertig' | 'wartet'; ergebnis?: string; schlange?: number; frei?: boolean }
-export interface Dienst { name: string; url: string; start: string; laeuft: boolean; freigegeben: boolean; vonUns: boolean }
+export interface Dienst { name: string; url: string; start: string; gemeinsam: boolean; zweck: string; hilfe: string; laeuft: boolean; freigegeben: boolean; vonUns: boolean }
 export interface Bezug { ref?: string; label?: string; selektor?: string; inhalt?: string; datei?: string; zeile?: number; kontext?: unknown; unsicher: boolean }
 export interface Marke { nr: number; art: string; text: string; bezug: Bezug; rect?: { x: number; y: number; w: number; h: number } }
 export interface Hinweis { id: string; von: string; artefakt?: string; ref?: string; text: string }

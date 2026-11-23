@@ -188,6 +188,9 @@ function DienstDialog(p: Props) {
   const [name, setName] = useState('')
   const [start, setStart] = useState('')
   const [url, setUrl] = useState('http://127.0.0.1:')
+  const [gemeinsam, setGemeinsam] = useState(false)
+  const [zweck, setZweck] = useState('')
+  const [hilfe, setHilfe] = useState('')
   return (
     <div class="dialog">
       <header><h2>{t('ui.dienstHinterlegen')}</h2></header>
@@ -196,11 +199,18 @@ function DienstDialog(p: Props) {
         <label>{t('ui.name')}<input class="feld" value={name} onInput={(e) => setName((e.target as HTMLInputElement).value)} /></label>
         <label>{t('ui.dd.start')}<input class="feld mono" value={start} placeholder="python3 werkzeuge/cockpit/server.py" onInput={(e) => setStart((e.target as HTMLInputElement).value)} /></label>
         <label>{t('ui.adresse')}<input class="feld mono" value={url} onInput={(e) => setUrl((e.target as HTMLInputElement).value)} /></label>
+        <label class="haken"><input type="checkbox" checked={gemeinsam} onChange={(e) => setGemeinsam((e.target as HTMLInputElement).checked)} /><span>{t('ui.dd.gemeinsam')}</span></label>
+        {gemeinsam && (
+          <>
+            <label>{t('ui.dd.zweck')}<input class="feld" value={zweck} maxLength={200} onInput={(e) => setZweck((e.target as HTMLInputElement).value)} /></label>
+            <label>{t('ui.dd.hilfe')}<input class="feld mono" value={hilfe} placeholder="http://127.0.0.1:…/hilfe" onInput={(e) => setHilfe((e.target as HTMLInputElement).value)} /></label>
+          </>
+        )}
       </div>
       <footer>
         <button class="knopf" onClick={p.zu}>{t('ui.abbrechen')}</button>
         <button class="knopf haupt" disabled={!name.trim() || !/^https?:\/\//.test(url)} onClick={async () => {
-          await ruf('dienstSpeichern', p.raum.projekt.id, { name: name.trim(), start: start.trim(), url: url.trim() })
+          await ruf('dienstSpeichern', p.raum.projekt.id, { name: name.trim(), start: start.trim(), url: url.trim(), gemeinsam, zweck, hilfe })
           await p.fertig()
         }}>{t('ui.dd.hinterlegen')}</button>
       </footer>
@@ -216,6 +226,12 @@ function DienstStart(p: Props & { dienst: Dienst }) {
       <div class="rumpf">
         <span>{t('ui.ds.text')}</span>
         <div class="vorschau">{p.dienst.start || t('ui.ds.keinBefehl')}</div>
+        {p.dienst.gemeinsam && (
+          <>
+            <span>{t('ui.ds.gemeinsam')}</span>
+            <div class="vorschau">{p.dienst.name} ({p.dienst.url}): {p.dienst.zweck || '—'}{p.dienst.hilfe ? `\ncurl -s ${p.dienst.hilfe}` : ''}</div>
+          </>
+        )}
         <span class="leise mono">{p.dienst.url}</span>
       </div>
       <footer>
@@ -224,7 +240,7 @@ function DienstStart(p: Props & { dienst: Dienst }) {
           setLaeuft(true)
           try { await ruf('dienstStarten', p.raum.projekt.id, p.dienst.name, true) } catch (e) { p.melde(fehlerText(e)) }
           await p.fertig()
-        }}>{laeuft ? t('ui.ds.startet') : t('ui.ds.ja')}</button>
+        }}>{laeuft ? t('ui.ds.startet') : t(p.dienst.start ? 'ui.ds.ja' : 'ui.ds.jaOhneStart')}</button>
       </footer>
     </div>
   )

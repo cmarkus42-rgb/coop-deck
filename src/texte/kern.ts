@@ -117,6 +117,9 @@ export const de = {
   'briefing.anfordern': '- `coop anfordern "<was du brauchst>" [--text "<worauf es ankommt>"] [--art foto|ton|beides] [--warten]` — Fotos oder gesprochene Notizen von {name}s Handy. Mit `--warten` als Hintergrundbefehl starten: er endet mit den Dateipfaden, sobald abgeschickt ist; Ton kommt als Text dazu. Nutze das, wenn du etwas sehen musst, das nicht im Rechner liegt.',
   'briefing.meldenTelegram': '- `coop melden "<ein, zwei Sätze>"` — Nachricht an {name} über Telegram. Nutze das, wenn du auf etwas Längeres gewartet hast (Build, Testlauf, Druck) und das Ergebnis da ist, oder wenn du ohne {name} nicht weiterkommst. Nicht für Zwischenstände.',
   'briefing.melden': '- `coop melden "<ein, zwei Sätze>"` — Mitteilung auf {name}s Rechner, wenn ein längeres Warten zu Ende ist oder du ohne {name} nicht weiterkommst. Nicht für Zwischenstände.',
+  'briefing.dienste': 'Dienste auf diesem Rechner, die jede Session benutzen darf ({name} hat sie bestätigt). `coop dienst liste` zeigt, ob sie laufen; `coop dienst starte <name>` startet einen:',
+  'briefing.dienst': '- {dienst} ({adresse}, aus dem Projekt {projekt}): {zweck}',
+  'briefing.dienstMitHilfe': '- {dienst} ({adresse}, aus dem Projekt {projekt}): {zweck} Wie man ihn benutzt: `curl -s {hilfe}`',
   'briefing.mcp': 'Wo deine CLI MCP unterstützt, gibt es dieselben Funktionen als Tools des Servers `coop` (`coop_zeigen`, `coop_hinweis`, `coop_frage`, `coop_roadmap_status` …). Nimm, was dir zur Hand ist; beides wirkt gleich.',
   'briefing.rueckmeldung': 'Rückmeldungen von {name} kommen als eine Zeile mit dem Pfad einer `.md`-Datei. Lies die Datei ganz: sie nennt je Marke, was gemeint ist und was er dazu sagt. Ist ein Bezug als geschätzt gekennzeichnet, nenne dein Verständnis in einem Satz, bevor du baust. Danach `coop rueckmeldung erledigt <kennung> --notiz "…"`.',
   'briefing.typisiert': 'Typisierte Artefakte trennen Daten und Darstellung: ändere die Datendatei, nie die Typvorlage. Schreibe nicht in `CLAUDE.md`/`AGENTS.md`, um dem Deck etwas mitzuteilen.',
@@ -228,6 +231,12 @@ export const de = {
   'befehl.anfrageOffen': 'Anfrage {id} ist noch nicht geliefert.',
   'befehl.keineAnfragen': 'Keine Anfragen.',
   'befehl.meldenAufruf': 'Aufruf: coop melden "<text>"',
+  'befehl.keineDienste': 'Keine Dienste hinterlegt.',
+  'befehl.dienst.laeuft': 'läuft',
+  'befehl.dienst.steht': 'läuft nicht',
+  'befehl.dienst.unbestaetigt': 'nicht bestätigt',
+  'befehl.dienstLaeuft': 'Der Dienst {name} läuft: {adresse}',
+  'befehl.dienstStartetNicht': 'Der Dienst {name} ist unter {adresse} nicht erreichbar.',
   'befehl.gemeldetTelegram': 'Gemeldet über Telegram.',
   'befehl.gemeldetMitteilung': 'Als Mitteilung am Rechner gezeigt. Telegram ist nicht eingerichtet (Einstellungen des Decks).',
   'befehl.gemeldetErsatz': 'Telegram hat die Nachricht nicht angenommen ({grund}). Als Mitteilung am Rechner gezeigt.',
@@ -265,6 +274,7 @@ export const de = {
   coop frage "<titel>" [--text "…"] --option "A::Titel::Erläuterung" … [--warten]
   coop antwort <frage-id>
   coop melden "<text>"                         Ergebnis melden: Telegram, sonst Mitteilung am Rechner
+  coop dienst liste | starte <name>            Dienste des Projekts und gemeinsame Dienste des Rechners
   coop anfordern "<titel>" [--text "…"] [--art foto|ton|beides] [--warten]     Fotos oder Ton vom Handy
   coop anfrage liste | zeige <kennung> | erledigt <kennung>
   coop bild <artefakt|datei|adresse> [--breite 1280] [--hoehe 900]
@@ -502,6 +512,9 @@ export const en: Record<keyof typeof de, string> = {
   'briefing.anfordern': '- `coop anfordern "<what you need>" [--text "<what matters>"] [--art foto|ton|beides] [--warten]` — photos or spoken notes from {name}’s phone. With `--warten`, start it as a background command: it ends with the file paths once the delivery is sent; audio also arrives as text. Use it when you need to see something that is not on the computer.',
   'briefing.meldenTelegram': '- `coop melden "<one or two sentences>"` — message to {name} via Telegram. Use it when you have waited for something long (a build, a test run, a print) and the result is in, or when you cannot continue without {name}. Not for progress updates.',
   'briefing.melden': '- `coop melden "<one or two sentences>"` — notification on {name}’s computer when a long wait is over or you cannot continue without {name}. Not for progress updates.',
+  'briefing.dienste': 'Services on this computer that every session may use ({name} has confirmed them). `coop dienst liste` shows whether they are running; `coop dienst starte <name>` starts one:',
+  'briefing.dienst': '- {dienst} ({adresse}, from the project {projekt}): {zweck}',
+  'briefing.dienstMitHilfe': '- {dienst} ({adresse}, from the project {projekt}): {zweck} How to use it: `curl -s {hilfe}`',
   'briefing.mcp': 'Where your CLI supports MCP, the same functions exist as tools of the server `coop` (`coop_zeigen`, `coop_hinweis`, `coop_frage`, `coop_roadmap_status` …). Use whichever is at hand; both have the same effect.',
   'briefing.rueckmeldung': 'Feedback from {name} arrives as one line with the path of a `.md` file. Read the whole file: for each mark it says what is meant and what they say about it. If a reference is flagged as estimated, state your understanding in one sentence before you build. Afterwards `coop rueckmeldung erledigt <id> --notiz "…"`.',
   'briefing.typisiert': 'Typed artifacts separate data and presentation: change the data file, never the type template. Do not write to `CLAUDE.md`/`AGENTS.md` to tell the deck something.',
@@ -613,6 +626,12 @@ export const en: Record<keyof typeof de, string> = {
   'befehl.anfrageOffen': 'Request {id} has not been delivered yet.',
   'befehl.keineAnfragen': 'No requests.',
   'befehl.meldenAufruf': 'Usage: coop melden "<text>"',
+  'befehl.keineDienste': 'No services added.',
+  'befehl.dienst.laeuft': 'running',
+  'befehl.dienst.steht': 'not running',
+  'befehl.dienst.unbestaetigt': 'not confirmed',
+  'befehl.dienstLaeuft': 'The service {name} is running: {adresse}',
+  'befehl.dienstStartetNicht': 'The service {name} cannot be reached at {adresse}.',
   'befehl.gemeldetTelegram': 'Sent via Telegram.',
   'befehl.gemeldetMitteilung': 'Shown as a notification on the computer. Telegram is not set up (settings of the deck).',
   'befehl.gemeldetErsatz': 'Telegram did not accept the message ({grund}). Shown as a notification on the computer.',
@@ -650,6 +669,7 @@ export const en: Record<keyof typeof de, string> = {
   coop frage "<title>" [--text "…"] --option "A::title::explanation" … [--warten]
   coop antwort <question-id>
   coop melden "<text>"                         report a result: Telegram, otherwise a notification
+  coop dienst liste | starte <name>            services of the project and shared services of this computer
   coop anfordern "<title>" [--text "…"] [--art foto|ton|beides] [--warten]     photos or audio from the phone
   coop anfrage liste | zeige <id> | erledigt <id>
   coop bild <artifact|file|url> [--breite 1280] [--hoehe 900]
@@ -662,7 +682,7 @@ export const en: Record<keyof typeof de, string> = {
 
 Commands and flags are German words in every language of the deck: artefakt = artifact, zeigen = show,
 hinweis = note, frage = question, antwort = answer, bild = image, rueckmeldung = feedback, sitzung = session,
-ergebnis = result, uebergabe = handover, anfordern = request, anfrage = request, melden = report; liste = list, neu = new, zeige = show, notiz = note, erledigt = done.
+ergebnis = result, uebergabe = handover, anfordern = request, anfrage = request, melden = report, dienst = service, starte = start; liste = list, neu = new, zeige = show, notiz = note, erledigt = done.
 Status values: offen = open, in-arbeit = in progress, pruefen = to review, erledigt = done, verworfen = dropped.
 
 References (--ref) are the ids an artifact assigns, e.g. roadmap:R-3 or datei:PROJEKT.md:14.
