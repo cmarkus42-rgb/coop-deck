@@ -115,6 +115,7 @@ export class Deck extends EventEmitter {
     this.sitzungen.on('geaendert', (s: Sitzung) => { this.emit('sitzung', s); this.emit('eingang') })
     this.sitzungen.on('schlange', (sid, n) => { this.emit('schlange', sid, n); this.emit('eingang') })
     this.sitzungen.on('zugestellt', (sid: string, kennung: string) => {
+      this.zugestellt.set(sid, Date.now())
       const s = this.sitzungen.get(sid)
       const p = s && this.projekte.get(s.projektId)
       if (p && kennung.startsWith('rm:')) {
@@ -600,6 +601,31 @@ export class Deck extends EventEmitter {
     return { an: !!m.an, tokenDa: !!m.token, tokenGueltig: tg.tokenGueltig(m.token), chat: m.chat ?? '', bereit: tg.eingerichtet(m) }
   }
 
+  /** Wann das Deck einer Session zuletzt selbst etwas getippt hat: solche Eingaben klären keine Frage. */
+  private zugestellt = new Map<string, number>()
+
+  /**
+   * Der Mensch hat in der Session selbst etwas eingegeben. Fragen, die sie davor gestellt hat und die noch
+   * im Eingang liegen, gelten damit als im Gespräch geklärt und verschwinden von dort. Ein wartender
+   * Befehl erfährt es und endet.
+   */
+  private fragenImGespraechGeklaert(s: Sitzung): void {
+    if (Date.now() - (this.zugestellt.get(s.id) ?? 0) < 5000) return
+    const p = this.projekte.get(s.projektId)
+    if (!p?.hatCoop) return
+    let geaendert = false
+    for (const f of pk.fragen(p.pfad)) {
+      if (f.von === s.id && !f.antwort && !f.erledigt && Date.now() - Date.parse(f.zeit) > 1500) geaendert = !!pk.frageErledigen(p.pfad, f.id, 'session') || geaendert
+    }
+    if (geaendert) this.emit('eingang')
+  }
+
+  /** Vom Menschen im Eingang abgeräumt. */
+  frageAbraeumen(pid: string, fid: string): void {
+    pk.frageErledigen(this.projekt(pid).pfad, fid, 'mensch')
+    this.emit('eingang')
+  }
+
   private gemeldet = new Map<string, number[]>()
   /** So viele Meldungen darf eine Session je Stunde schicken: eine Schleife soll kein Telefon fluten. */
   meldeGrenze = 20
@@ -783,7 +809,7 @@ export class Deck extends EventEmitter {
       }
       if (!p.hatCoop) continue
       for (const f of pk.fragen(p.pfad)) {
-        if (!f.antwort) out.push({ art: 'frage', projektId: p.id, projekt: p.name, kennung: f.id, titel: f.titel, text: f.text, zeit: f.zeit, frage: f, sitzung: f.von })
+        if (!f.antwort && !f.erledigt) out.push({ art: 'frage', projektId: p.id, projekt: p.name, kennung: f.id, titel: f.titel, text: f.text, zeit: f.zeit, frage: f, sitzung: f.von })
       }
       // Ein Dienst, den das Projekt allen anbieten will, wartet auf die Bestätigung: sonst sucht man den Knopf dafür.
       for (const d of this.projekte.datei(p).dienste) {
@@ -924,7 +950,10 @@ export class Deck extends EventEmitter {
 
     const s = kontext.sitzung ? this.sitzungen.get(kontext.sitzung) : undefined
     if (was === '_ereignis') {
-      if (s) this.sitzungen.ereignis(s.id, rest[0] ?? '')
+      if (s) {
+        this.sitzungen.ereignis(s.id, rest[0] ?? '')
+        if (rest[0] === 'arbeitet') this.fragenImGespraechGeklaert(s)
+      }
       return ok('')
     }
     const p = s ? this.projekte.get(s.projektId) : kontext.projektPfad ? this.projekte.hinzufuegen(kontext.projektPfad) : null
@@ -964,6 +993,13 @@ export class Deck extends EventEmitter {
         return ok(t('befehl.hinweisGesetzt', { id: h.id }))
       }
       case 'frage': {
+        if (rest[0] === 'zurueck' && rest[1]) {
+          const f = pk.fragen(p.pfad).find((x) => x.id === rest[1])
+          if (!f) throw new Error(t('frage.fehlt', { id: rest[1] }))
+          pk.frageErledigen(p.pfad, f.id, 'zurueckgezogen')
+          this.emit('eingang')
+          return ok(t('befehl.frageZurueck', { id: f.id }))
+        }
         if (!rest[0]) throw new Error(t('befehl.frageTitel'))
         const optionen = alle('option').map((o, i) => {
           const [oid, titel, beschreibung] = o.split('::')
@@ -1025,7 +1061,7 @@ export class Deck extends EventEmitter {
       case 'antwort': {
         const f = pk.fragen(p.pfad).find((x) => x.id === rest[0])
         if (!f) throw new Error(t('frage.fehlt', { id: rest[0] }))
-        return ok(f.antwort ? pk.antwortAlsText(f) : t('befehl.unbeantwortet'))
+        return ok(f.antwort || f.erledigt ? pk.antwortAlsText(f) : t('befehl.unbeantwortet'))
       }
       case 'bild': {
         if (!this.bildgeber) throw new Error(t('befehl.bildOhneFenster'))

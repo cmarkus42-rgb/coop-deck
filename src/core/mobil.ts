@@ -155,7 +155,7 @@ export class Mobil {
       if (!p) return json(404, { fehler: t('fehler.projektUnbekannt') })
       if (url.pathname === '/api/antwort') {
         const f = pk.fragen(p.pfad).find((x) => x.id === kennung)
-        if (!f || f.antwort) return json(404, { fehler: t('frage.fehlt', { id: kennung }) })
+        if (!f || f.antwort || f.erledigt) return json(404, { fehler: t('frage.fehlt', { id: kennung }) })
         if (!f.optionen.some((o) => o.id === b.option)) return json(400, { fehler: t('mobil.optionFehlt') })
         this.deck.frageBeantworten(p.id, f.id, { option: String(b.option) })
         return json(200, { ok: true })

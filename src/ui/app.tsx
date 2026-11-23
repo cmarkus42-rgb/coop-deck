@@ -906,6 +906,7 @@ function App() {
                     <div class="reihe">
                       <input class="feld" placeholder={p.frage.optionen.length ? t('ui.eingang.zusatz') : t('ui.eingang.antwort')} value={freiText[p.kennung] ?? ''} onInput={(e) => setFreiText({ ...freiText, [p.kennung]: (e.target as HTMLInputElement).value })} />
                       <button class="knopf" disabled={!freiText[p.kennung]?.trim()} onClick={() => void versuche(() => ruf('frageBeantworten', p.projektId, p.kennung, { text: freiText[p.kennung] })).then(ladeEingang)}>{t('ui.eingang.nurText')}</button>
+                      <button class="knopf flach" title={t('ui.eingang.abraeumenTitel')} onClick={() => void versuche(() => ruf('frageAbraeumen', p.projektId, p.kennung)).then(ladeEingang)}>{t('ui.eingang.abraeumen')}</button>
                     </div>
                   </>
                 )}

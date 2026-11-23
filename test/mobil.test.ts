@@ -406,3 +406,48 @@ test('Gemeinsame Dienste: erst nach Bestätigung im Briefing aller Sessions; ge�
   }
 })
 
+test('Fragen räumen sich ab: im Gespräch geklärt, zurückgezogen oder von Hand; ein wartender Befehl erfährt es', async () => {
+  const { deck, basis, kopf, k, p, zu } = await aufbau('p-abraeumen')
+  try {
+    const stelle = (titel: string, von: string, alter = 10000) => {
+      const { frage, datei } = pk.frageAnlegen(p.pfad, { von, titel, optionen: [{ id: 'A', titel: 'ja' }], wartend: true })
+      fs.writeFileSync(datei, JSON.stringify({ ...frage, zeit: new Date(Date.now() - alter).toISOString() }))
+      return frage.id
+    }
+    const eigene = stelle('Welche Farbe?', 'sitz-1')
+    const fremde = stelle('Andere Session', 'sitz-2')
+    const frisch = stelle('Gerade erst gestellt', 'sitz-1', 0)
+    const offen = () => deck.eingang().filter((e) => e.art === 'frage' && e.projektId === p.id).map((e) => e.titel).sort()
+    assert.deepEqual(offen(), ['Andere Session', 'Gerade erst gestellt', 'Welche Farbe?'])
+
+    // Der Mensch schreibt in der Session: ihre älteren Fragen gelten als im Gespräch geklärt.
+    const geklaert = (sid: string) => (deck as unknown as { fragenImGespraechGeklaert(s: { id: string; projektId: string }): void }).fragenImGespraechGeklaert({ id: sid, projektId: p.id })
+    geklaert('sitz-1')
+    assert.deepEqual(offen(), ['Andere Session', 'Gerade erst gestellt'], 'nur die eigenen, und nicht die im selben Augenblick gestellte')
+    const f = pk.fragen(p.pfad).find((x) => x.id === eigene)!
+    assert.equal(f.erledigt?.wie, 'session')
+    assert.match(pk.antwortAlsText(f), /aus dem Eingang genommen/)
+    assert.match((await deck.befehl(['antwort', eigene], k)).aus, /aus dem Eingang genommen/)
+    // Am Handy lässt sie sich nicht mehr beantworten.
+    assert.equal((await fetch(`${basis}/api/antwort?p=${p.id}&id=${eigene}`, { method: 'POST', headers: kopf, body: JSON.stringify({ option: 'A' }) })).status, 404)
+
+    // Hat das Deck selbst gerade etwas in die Session getippt, klärt das keine Frage.
+    ;(deck as unknown as { zugestellt: Map<string, number> }).zugestellt.set('sitz-2', Date.now())
+    geklaert('sitz-2')
+    assert.deepEqual(offen(), ['Andere Session', 'Gerade erst gestellt'])
+
+    // Die Session zieht zurück, der Mensch räumt ab.
+    assert.match((await deck.befehl(['frage', 'zurueck', fremde], k)).aus, /zurückgezogen/)
+    deck.frageAbraeumen(p.id, frisch)
+    assert.deepEqual(offen(), [])
+    assert.equal(pk.fragen(p.pfad).find((x) => x.id === frisch)!.erledigt?.wie, 'mensch')
+    // Eine Antwort im Eingang gilt weiter und hebt „erledigt“ auf.
+    deck.frageBeantworten(p.id, frisch, { option: 'A' })
+    const b = pk.fragen(p.pfad).find((x) => x.id === frisch)!
+    assert.equal(b.erledigt, undefined)
+    assert.match(pk.antwortAlsText(b), /A — ja/)
+  } finally {
+    await zu()
+  }
+})
+

@@ -211,6 +211,7 @@ const methoden: Methoden = {
 
   eingang: () => deck.eingang(),
   frageBeantworten: (pid: string, fid: string, antwort: { option?: string; text?: string }) => deck.frageBeantworten(pid, fid, antwort),
+  frageAbraeumen: (pid: string, fid: string) => deck.frageAbraeumen(pid, fid),
   hinweisGesehen: (pid: string, hid: string) => { pk.hinweisGesehen(deck.projekt(pid).pfad, hid); melden('eingang') },
   anfrageGesehen: (pid: string, aid: string) => deck.anfrageGesehen(pid, aid),
   zeigeDatei: (pid: string, rel: string) => { deck.emit('zeigen', { projektId: pid, datei: String(rel) }) },

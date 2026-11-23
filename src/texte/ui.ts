@@ -175,6 +175,8 @@ export const de = {
   'ui.eingang.jetzt': 'Jetzt senden',
   'ui.eingang.hin': 'Hingehen',
   'ui.eingang.gesehen': 'Gesehen',
+  'ui.eingang.abraeumen': 'Erledigt',
+  'ui.eingang.abraeumenTitel': 'Aus dem Eingang nehmen, ohne zu antworten: im Gespräch geklärt oder nicht mehr nötig',
 
   // --- Befehlspalette
   'ui.palette.feld': 'Projekt, Session, Artefakt, Roadmap-Punkt oder Befehl',
@@ -481,6 +483,8 @@ export const en: Record<keyof typeof de, string> = {
   'ui.eingang.jetzt': 'Send now',
   'ui.eingang.hin': 'Go there',
   'ui.eingang.gesehen': 'Seen',
+  'ui.eingang.abraeumen': 'Done',
+  'ui.eingang.abraeumenTitel': 'Take it out of the inbox without answering: settled in the conversation or no longer needed',
 
   // --- Command palette
   'ui.palette.feld': 'Project, session, artifact, roadmap item or command',

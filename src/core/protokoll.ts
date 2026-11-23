@@ -77,6 +77,8 @@ export interface Frage {
   /** Der fragende Befehl wartet selbst auf die Antwort; dann wird sie nicht zusätzlich zugestellt. */
   wartend?: boolean
   antwort?: { option?: string; text?: string; zeit: string }
+  /** Ohne Antwort aus dem Eingang genommen: im Gespräch geklärt, von der Session zurückgezogen oder vom Menschen abgeräumt. */
+  erledigt?: { zeit: string; wie: 'session' | 'zurueckgezogen' | 'mensch' }
 }
 
 const dir = (projektPfad: string, was: string) => path.join(projektPfad, '.coop', was)
@@ -201,12 +203,24 @@ export function frageBeantworten(projektPfad: string, fid: string, antwort: { op
   const f = frageDatei(projektPfad, fid)
   const frage = readJson<Frage | null>(f, null)
   if (!frage) throw new Error(t('frage.fehlt', { id: fid }))
+  frage.erledigt = undefined
   frage.antwort = { ...antwort, zeit: new Date().toISOString() }
   writeJson(f, frage)
   return frage
 }
 
+/** Nimmt eine unbeantwortete Frage aus dem Eingang. Eine beantwortete bleibt, wie sie ist. */
+export function frageErledigen(projektPfad: string, fid: string, wie: NonNullable<Frage['erledigt']>['wie']): Frage | null {
+  const f = frageDatei(projektPfad, fid)
+  const frage = readJson<Frage | null>(f, null)
+  if (!frage || frage.antwort || frage.erledigt) return null
+  frage.erledigt = { zeit: new Date().toISOString(), wie }
+  writeJson(f, frage)
+  return frage
+}
+
 export function antwortAlsText(f: Frage): string {
+  if (!f.antwort && f.erledigt) return t(f.erledigt.wie === 'session' ? 'frage.erledigtSession' : 'frage.erledigt', { titel: f.titel, name: nutzer() })
   const o = f.optionen.find((x) => x.id === f.antwort?.option)
   const teile = [t('antwort.von', { name: nutzer(), titel: f.titel })]
   if (o) teile.push(`${o.id} — ${o.titel}.`)

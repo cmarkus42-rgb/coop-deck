@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Questions leave the inbox when they are settled in the conversation, withdrawn by the session or cleared by hand.
 - Shared services: a project offers a local service to all projects; after confirmation every briefing names it. `coop dienst liste | starte`.
 
 ## 0.0.1

@@ -72,6 +72,11 @@ async function main(): Promise<number> {
     // Warten ohne Polling des Agenten: der Befehl selbst blockiert, bis die Datei eine Antwort trägt.
     for (;;) {
       const f = readJson<(Frage & { ausgabe?: string }) | null>(antwort.warteAuf, null)
+      // Im Gespräch geklärt, zurückgezogen oder abgeräumt: es kommt keine Antwort mehr, also nicht weiter warten.
+      if (f && !f.antwort && f.erledigt) {
+        console.log(antwortAlsText(f))
+        break
+      }
       if (f?.antwort) {
         // Eine Anfrage (Fotos, Ton vom Handy) bringt ihren Text mit; der Kern erfährt, dass er angekommen ist.
         if (typeof f.ausgabe === 'string') {

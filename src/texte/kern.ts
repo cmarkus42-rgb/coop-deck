@@ -170,6 +170,8 @@ export const de = {
   'bezug.kontext': 'Kontext: {kontext}',
   'bezug.keiner': 'kein Bezug ermittelt',
   'frage.fehlt': 'Frage {id} gibt es nicht.',
+  'frage.erledigtSession': 'Die Frage „{titel}“ ist aus dem Eingang genommen: {name} hat danach in der Session selbst geschrieben. Die Antwort steht im Gespräch.',
+  'frage.erledigt': 'Die Frage „{titel}“ ist erledigt, ohne dass {name} sie im Eingang beantwortet hat.',
   'anfrage.fehlt': 'Anfrage {id} gibt es nicht.',
   'anfrage.geliefert': 'Vom Handy geliefert von {name}: „{titel}“ (Anfrage {id})',
   'anfrage.frei': '{name} schickt vom Handy: „{titel}“ (Lieferung {id})',
@@ -224,6 +226,7 @@ export const de = {
   'befehl.frageTitel': 'Titel fehlt: coop frage "<titel>" --option "A::Titel::Erläuterung"',
   'befehl.frageGestellt': 'Frage gestellt ({id}). Antwort später: coop antwort {id}',
   'befehl.frageWartet': 'Frage gestellt ({id}). Warte auf die Antwort …',
+  'befehl.frageZurueck': 'Frage {id} ist zurückgezogen.',
   'befehl.anfordernAufruf': 'Aufruf: coop anfordern "<titel>" [--text "…"] [--art foto|ton|beides] [--warten]',
   'befehl.anfordernArt': 'Art ist foto, ton oder beides.',
   'befehl.mobilAus': 'Der Zugang fürs Handy ist ausgeschaltet. Er wird in den Einstellungen des Decks eingeschaltet.',
@@ -275,6 +278,7 @@ export const de = {
   coop hinweis "<text>" [--artefakt <id>] [--ref <bezug>]
   coop frage "<titel>" [--text "…"] --option "A::Titel::Erläuterung" … [--warten]
   coop antwort <frage-id>
+  coop frage zurueck <frage-id>                Frage zurückziehen, wenn sie sich erledigt hat
   coop melden "<text>"                         Ergebnis melden: Telegram, sonst Mitteilung am Rechner
   coop dienst liste | starte <name>            Dienste des Projekts und gemeinsame Dienste des Rechners
   coop anfordern "<titel>" [--text "…"] [--art foto|ton|beides] [--warten]     Fotos oder Ton vom Handy
@@ -567,6 +571,8 @@ export const en: Record<keyof typeof de, string> = {
   'bezug.kontext': 'context: {kontext}',
   'bezug.keiner': 'no reference found',
   'frage.fehlt': 'There is no question {id}.',
+  'frage.erledigtSession': 'The question “{titel}” was taken out of the inbox: {name} wrote in the session afterwards. The answer is in the conversation.',
+  'frage.erledigt': 'The question “{titel}” is closed without {name} having answered it in the inbox.',
   'anfrage.fehlt': 'There is no request {id}.',
   'anfrage.geliefert': 'Delivered from the phone by {name}: “{titel}” (request {id})',
   'anfrage.frei': '{name} sent from their phone: “{titel}” (delivery {id})',
@@ -621,6 +627,7 @@ export const en: Record<keyof typeof de, string> = {
   'befehl.frageTitel': 'Title missing: coop frage "<title>" --option "A::title::explanation"',
   'befehl.frageGestellt': 'Question asked ({id}). Fetch the answer later with: coop antwort {id}',
   'befehl.frageWartet': 'Question asked ({id}). Waiting for the answer…',
+  'befehl.frageZurueck': 'Question {id} has been withdrawn.',
   'befehl.anfordernAufruf': 'Usage: coop anfordern "<title>" [--text "…"] [--art foto|ton|beides] [--warten]',
   'befehl.anfordernArt': 'The kind is foto, ton or beides (photo, audio or both).',
   'befehl.mobilAus': 'Phone access is switched off. Switch it on in the deck’s settings.',
@@ -672,6 +679,7 @@ export const en: Record<keyof typeof de, string> = {
   coop hinweis "<text>" [--artefakt <id>] [--ref <reference>]
   coop frage "<title>" [--text "…"] --option "A::title::explanation" … [--warten]
   coop antwort <question-id>
+  coop frage zurueck <question-id>             withdraw a question that has settled itself
   coop melden "<text>"                         report a result: Telegram, otherwise a notification
   coop dienst liste | starte <name>            services of the project and shared services of this computer
   coop anfordern "<title>" [--text "…"] [--art foto|ton|beides] [--warten]     photos or audio from the phone
@@ -686,7 +694,7 @@ export const en: Record<keyof typeof de, string> = {
 
 Commands and flags are German words in every language of the deck: artefakt = artifact, zeigen = show,
 hinweis = note, frage = question, antwort = answer, bild = image, rueckmeldung = feedback, sitzung = session,
-ergebnis = result, uebergabe = handover, anfordern = request, anfrage = request, melden = report, dienst = service, starte = start; liste = list, neu = new, zeige = show, notiz = note, erledigt = done.
+ergebnis = result, uebergabe = handover, anfordern = request, anfrage = request, melden = report, dienst = service, starte = start, zurueck = withdraw; liste = list, neu = new, zeige = show, notiz = note, erledigt = done.
 Status values: offen = open, in-arbeit = in progress, pruefen = to review, erledigt = done, verworfen = dropped.
 
 References (--ref) are the ids an artifact assigns, e.g. roadmap:R-3 or datei:PROJEKT.md:14.
