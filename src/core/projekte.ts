@@ -193,6 +193,11 @@ export class Projekte {
     writeJson(path.join(coopDir(p), 'project.json'), d)
   }
 
+  /** Kennung dessen, was bestätigt wird: wer bestätigt, nennt sie, damit Gezeigtes und Bestätigtes dasselbe sind. */
+  dienstKennung(p: Projekt, d: Dienst): string {
+    return dienstSchluessel(p, d)
+  }
+
   /** Ein Startbefehl läuft erst nach einmaliger Bestätigung (SI-07). */
   dienstFreigegeben(p: Projekt, d: Dienst): boolean {
     return !!this.reg.get().dienstFreigaben[dienstSchluessel(p, d)]

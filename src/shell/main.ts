@@ -228,7 +228,7 @@ const methoden: Methoden = {
 
   dienste: (pid: string) => deck.dienste(pid),
   dienstSpeichern: (pid: string, d: { name: string; start: string; url: string }) => deck.dienstSpeichern(pid, d),
-  dienstStarten: (pid: string, name: string, freigeben: boolean) => deck.dienstStarten(pid, name, freigeben),
+  dienstStarten: (pid: string, name: string, freigeben: boolean, gesehen?: string) => deck.dienstStarten(pid, name, freigeben, typeof gesehen === 'string' ? gesehen : undefined),
 
   /** Bild aus der Zwischenablage im Projekt ablegen und den Pfad zurückgeben (QL-04). */
   ablageBild: async (pid: string) => {

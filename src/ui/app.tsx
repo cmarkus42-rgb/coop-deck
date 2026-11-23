@@ -867,7 +867,7 @@ function App() {
             <span class="pfad mono" title={raum.projekt.pfad}>{raum.projekt.pfad}</span>
             <span class="frei" />
             {raum.dienste.map((d) => (
-              <button class={`dienst${d.gemeinsam ? (d.freigegeben ? ' gemeinsam' : ' unbestaetigt') : ''}`} title={`${d.url}\n${d.start}${d.gemeinsam ? `\n${t(d.freigegeben ? 'ui.fuss.dienstGemeinsam' : 'ui.fuss.dienstUnbestaetigt')}` : ''}`} onClick={() => { if (d.gemeinsam && !d.freigegeben) setDialog({ art: 'dienst-start', dienst: d }); else if (d.laeuft) oeffneAdresse(d.url, d.name); else if (d.freigegeben) void versuche(() => ruf('dienstStarten', raum.projekt.id, d.name, false)).then(() => auffrischen()); else setDialog({ art: 'dienst-start', dienst: d }) }}>
+              <button class={`dienst${d.gemeinsam ? (d.freigegeben ? ' gemeinsam' : ' unbestaetigt') : ''}`} title={`${d.url}\n${d.start}${d.gemeinsam ? `\n${t(d.freigegeben ? 'ui.fuss.dienstGemeinsam' : 'ui.fuss.dienstUnbestaetigt')}` : ''}`} onClick={() => { if (d.gemeinsam && !d.freigegeben) setDialog({ art: 'dienst-start', dienst: d, projektId: raum.projekt.id }); else if (d.laeuft) oeffneAdresse(d.url, d.name); else if (d.freigegeben) void versuche(() => ruf('dienstStarten', raum.projekt.id, d.name, false)).then(() => auffrischen()); else setDialog({ art: 'dienst-start', dienst: d, projektId: raum.projekt.id }) }}>
                 <span class={`led ${d.laeuft ? 'an' : 'aus'}`} />{d.name}
               </button>
             ))}
@@ -917,7 +917,7 @@ function App() {
                         if (raum?.projekt.id !== p.projektId) await waehleProjekt(p.projektId)
                         const d = (await ruf<Dienst[]>('dienste', p.projektId)).find((x) => `dienst:${x.name}` === p.kennung)
                         setEingangOffen(false)
-                        if (d) setDialog({ art: 'dienst-start', dienst: d })
+                        if (d) setDialog({ art: 'dienst-start', dienst: d, projektId: p.projektId })
                         return
                       }
                       if (raum?.projekt.id !== p.projektId) await waehleProjekt(p.projektId)

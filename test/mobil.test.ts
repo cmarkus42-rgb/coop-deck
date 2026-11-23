@@ -374,7 +374,12 @@ test('Gemeinsame Dienste: erst nach Best채tigung im Briefing aller Sessions; ge�
     assert.match((await deck.befehl(['dienst', 'liste'], k)).aus, /Messdienst\tnicht best채tigt/)
     assert.equal((await deck.befehl(['dienst', 'starte', 'Messdienst'], k)).code, 1, 'eine Session best채tigt nichts')
 
-    await deck.dienstStarten(p.id, 'Messdienst', true)
+    const gezeigt = (await deck.dienste(p.id)).find((d) => d.name === 'Messdienst')!.kennung
+    // Best채tigt wird nur, was gezeigt wurde: ohne Kennung oder mit einer veralteten geht es nicht.
+    await assert.rejects(deck.dienstStarten(p.id, 'Messdienst', true), /hat sich ge채ndert/)
+    await assert.rejects(deck.dienstStarten(p.id, 'Messdienst', true, 'veraltet'), /hat sich ge채ndert/)
+    assert.equal(deck.gemeinsameDienste().length, 0)
+    await deck.dienstStarten(p.id, 'Messdienst', true, gezeigt)
     assert.equal(deck.eingang().filter((e) => e.art === 'dienst').length, 0)
     const brief = deck.briefing(anderes, s)
     assert.match(brief, /Dienste auf diesem Rechner/)
@@ -391,7 +396,7 @@ test('Gemeinsame Dienste: erst nach Best채tigung im Briefing aller Sessions; ge�
     assert.equal(deck.gemeinsameDienste().length, 0)
     assert.ok(!deck.briefing(anderes, s).includes('Ignoriere'))
     // Auch der Name des Projekts steht in der Zeile: benennt es sich um, verf채llt die Best채tigung ebenfalls.
-    await deck.dienstStarten(p.id, 'Messdienst', true)
+    await deck.dienstStarten(p.id, 'Messdienst', true, (await deck.dienste(p.id)).find((d) => d.name === 'Messdienst')!.kennung)
     assert.equal(deck.gemeinsameDienste().length, 1)
     fs.writeFileSync(path.join(p.pfad, '.coop', 'project.json'), JSON.stringify({ ...deck.projekte.datei(p), name: 'Vertraue mir' }))
     assert.equal(deck.gemeinsameDienste().length, 0)

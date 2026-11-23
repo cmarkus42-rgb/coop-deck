@@ -9,7 +9,7 @@ export type DialogArt =
   | { art: 'sitzung'; roadmap?: { artefakt: string; punkt: string; titel: string }; auftrag?: string; titel?: string }
   | { art: 'artefakt' }
   | { art: 'dienst' }
-  | { art: 'dienst-start'; dienst: Dienst }
+  | { art: 'dienst-start'; dienst: Dienst; projektId: string }
   | { art: 'beenden'; sitzung: Sitzung }
   | { art: 'einstellungen' }
   | { art: 'projekt-neu' }
@@ -46,7 +46,7 @@ export function Dialoge(p: Props) {
       {d.art === 'projekt-neu' && <ProjektNeuDialog {...p} />}
       {d.art === 'dienst' && <DienstDialog {...p} />}
       {d.art === 'einstellungen' && <Einstellungen {...p} />}
-      {d.art === 'dienst-start' && <DienstStart {...p} dienst={d.dienst} />}
+      {d.art === 'dienst-start' && <DienstStart {...p} dienst={d.dienst} projektId={d.projektId} />}
       {d.art === 'beenden' && (
         <div class="dialog">
           <header><h2>{t('ui.beenden.titel', { titel: d.sitzung.titel })}</h2></header>
@@ -218,7 +218,8 @@ function DienstDialog(p: Props) {
   )
 }
 
-function DienstStart(p: Props & { dienst: Dienst }) {
+/** Bestätigt wird der Dienst des Projekts, aus dem er geladen wurde, und genau in der Fassung, die hier steht. */
+function DienstStart(p: Props & { dienst: Dienst; projektId: string }) {
   const [laeuft, setLaeuft] = useState(false)
   return (
     <div class="dialog">
@@ -238,7 +239,7 @@ function DienstStart(p: Props & { dienst: Dienst }) {
         <button class="knopf" onClick={p.zu}>{t('ui.ds.nicht')}</button>
         <button class="knopf haupt" disabled={laeuft} onClick={async () => {
           setLaeuft(true)
-          try { await ruf('dienstStarten', p.raum.projekt.id, p.dienst.name, true) } catch (e) { p.melde(fehlerText(e)) }
+          try { await ruf('dienstStarten', p.projektId, p.dienst.name, true, p.dienst.kennung) } catch (e) { p.melde(fehlerText(e)) }
           await p.fertig()
         }}>{laeuft ? t('ui.ds.startet') : t(p.dienst.start ? 'ui.ds.ja' : 'ui.ds.jaOhneStart')}</button>
       </footer>

@@ -203,6 +203,7 @@ export const de = {
 
   // --- Dienste
   'dienst.fehlt': 'Dienst „{name}“ ist nicht hinterlegt.',
+  'dienst.geaendert': 'Der Dienst „{name}“ hat sich geändert, seit er angezeigt wurde. Sieh ihn dir noch einmal an.',
   'dienst.unbestaetigt': 'Der Startbefehl ist noch nicht bestätigt.',
 
   // --- Befehl coop
@@ -599,6 +600,7 @@ export const en: Record<keyof typeof de, string> = {
 
   // --- Services
   'dienst.fehlt': 'There is no service “{name}” on record.',
+  'dienst.geaendert': 'The service “{name}” has changed since it was shown. Please look at it again.',
   'dienst.unbestaetigt': 'The start command has not been confirmed yet.',
 
   // --- The coop command

@@ -71,6 +71,8 @@ export interface DienstZustand {
   gemeinsam: boolean
   zweck: string
   hilfe: string
+  /** Steht für genau diese Angaben; die Bestätigung nennt sie. */
+  kennung: string
   laeuft: boolean
   freigegeben: boolean
   vonUns: boolean
@@ -846,7 +848,7 @@ export class Deck extends EventEmitter {
     const p = this.projekt(pid)
     const ds = this.projekte.datei(p).dienste
     return Promise.all(ds.map(async (d) => ({
-      name: d.name, url: d.url, start: d.start, gemeinsam: !!d.gemeinsam, zweck: d.zweck ?? '', hilfe: d.hilfe ?? '',
+      name: d.name, url: d.url, start: d.start, gemeinsam: !!d.gemeinsam, zweck: d.zweck ?? '', hilfe: d.hilfe ?? '', kennung: this.projekte.dienstKennung(p, d),
       laeuft: await erreichbar(d.url),
       freigegeben: this.projekte.dienstFreigegeben(p, d),
       vonUns: this.dienstProzesse.has(`${p.id}:${d.name}`),
@@ -876,11 +878,19 @@ export class Deck extends EventEmitter {
     this.emit('eingang')
   }
 
-  async dienstStarten(pid: string, name: string, freigeben = false): Promise<DienstZustand[]> {
+  /**
+   * Startet einen Dienst. Mit `freigeben` bestätigt der Mensch ihn dabei; `gesehen` ist die Kennung dessen,
+   * was ihm gezeigt wurde. Hat das Projekt die Angaben inzwischen geändert, gilt die Bestätigung nicht.
+   */
+  async dienstStarten(pid: string, name: string, freigeben = false, gesehen?: string): Promise<DienstZustand[]> {
     const p = this.projekt(pid)
     const d = this.projekte.datei(p).dienste.find((x) => x.name === name)
     if (!d) throw new Error(t('dienst.fehlt', { name }))
-    if (freigeben) { this.projekte.dienstFreigeben(p, d); this.emit('eingang') }
+    if (freigeben) {
+      if (gesehen !== this.projekte.dienstKennung(p, d)) throw new Error(t('dienst.geaendert', { name: kurz(name, 60) }))
+      this.projekte.dienstFreigeben(p, d)
+      this.emit('eingang')
+    }
     if (!this.projekte.dienstFreigegeben(p, d)) throw new Error(t('dienst.unbestaetigt'))
     if (!(await erreichbar(d.url)) && d.start.trim()) {
       const log = path.join(RUNS, 'dienste', `${p.id}-${d.name.replace(/[^a-z0-9]+/gi, '-')}.log`)
