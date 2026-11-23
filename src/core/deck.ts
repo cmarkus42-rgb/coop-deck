@@ -27,7 +27,7 @@ export interface Zeigen {
 }
 
 export interface EingangPosten {
-  art: 'frage' | 'sitzung' | 'hinweis' | 'schlange' | 'anfrage' | 'lieferung'
+  art: 'frage' | 'sitzung' | 'hinweis' | 'schlange' | 'anfrage' | 'lieferung' | 'dienst'
   projektId: string
   projekt: string
   kennung: string
@@ -783,6 +783,10 @@ export class Deck extends EventEmitter {
       for (const f of pk.fragen(p.pfad)) {
         if (!f.antwort) out.push({ art: 'frage', projektId: p.id, projekt: p.name, kennung: f.id, titel: f.titel, text: f.text, zeit: f.zeit, frage: f, sitzung: f.von })
       }
+      // Ein Dienst, den das Projekt allen anbieten will, wartet auf die Bestätigung: sonst sucht man den Knopf dafür.
+      for (const d of this.projekte.datei(p).dienste) {
+        if (d.gemeinsam && !this.projekte.dienstFreigegeben(p, d)) out.push({ art: 'dienst', projektId: p.id, projekt: p.name, kennung: `dienst:${d.name}`, titel: kurz(d.name.replace(/\s+/g, ' '), 60), text: t('eingang.dienst'), zeit: new Date().toISOString() })
+      }
       for (const a of pk.anfragen(p.pfad)) {
         if (a.status === 'offen' && a.von !== 'handy') out.push({ art: 'anfrage', projektId: p.id, projekt: p.name, kennung: a.id, titel: a.titel, text: t('eingang.anfrage', { adresse: this.mobilAdresse() }), zeit: a.zeit, sitzung: a.von })
         // Geliefert, aber von niemandem abgeholt: keine Session lief. Die Frist des wartenden Befehls zählt noch nicht dazu.
@@ -869,13 +873,14 @@ export class Deck extends EventEmitter {
     d = { name: d.name, start: d.start, url: d.url, ...(d.gemeinsam ? { gemeinsam: true, zweck: zeile(d.zweck, 200), hilfe: /^https?:\/\/\S+$/.test(d.hilfe?.trim() ?? '') ? d.hilfe!.trim() : undefined } : {}) }
     datei.dienste = [...datei.dienste.filter((x) => x.name !== d.name), d]
     this.projekte.dateiSchreiben(p, datei)
+    this.emit('eingang')
   }
 
   async dienstStarten(pid: string, name: string, freigeben = false): Promise<DienstZustand[]> {
     const p = this.projekt(pid)
     const d = this.projekte.datei(p).dienste.find((x) => x.name === name)
     if (!d) throw new Error(t('dienst.fehlt', { name }))
-    if (freigeben) this.projekte.dienstFreigeben(p, d)
+    if (freigeben) { this.projekte.dienstFreigeben(p, d); this.emit('eingang') }
     if (!this.projekte.dienstFreigegeben(p, d)) throw new Error(t('dienst.unbestaetigt'))
     if (!(await erreichbar(d.url)) && d.start.trim()) {
       const log = path.join(RUNS, 'dienste', `${p.id}-${d.name.replace(/[^a-z0-9]+/gi, '-')}.log`)

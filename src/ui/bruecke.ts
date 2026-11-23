@@ -11,7 +11,7 @@ export interface Frage { id: string; titel: string; text?: string; optionen: { i
 export interface Sprache { modell?: string; sprache?: string; ausgabe?: boolean; stimme?: string; piper?: string; bruecke?: string; tasten?: Record<string, string> }
 export interface SprachLage { erkennung: boolean; ausgabe: boolean; vorleser: 'piper' | 'system' | null; vorleserFehlt: string | null; stimmen: string[]; fehlt: string[]; modell: string | null; fernbedienung: boolean; aktionen: Record<string, string>; tastenVorgabe: Record<string, string>; fernFehler: string | null }
 export interface Treffer { art: 'projekt' | 'sitzung' | 'artefakt' | 'punkt' | 'rueckmeldung'; projektId: string; projekt: string; kennung: string; titel: string; text?: string; artefakt?: string; ref?: string }
-export interface Posten { art: 'frage' | 'sitzung' | 'hinweis' | 'schlange' | 'anfrage' | 'lieferung'; projektId: string; projekt: string; kennung: string; titel: string; text?: string; zeit: string; frage?: Frage; sitzung?: string; artefakt?: string; ref?: string }
+export interface Posten { art: 'frage' | 'sitzung' | 'hinweis' | 'schlange' | 'anfrage' | 'lieferung' | 'dienst'; projektId: string; projekt: string; kennung: string; titel: string; text?: string; zeit: string; frage?: Frage; sitzung?: string; artefakt?: string; ref?: string }
 export interface MobilLage { an: boolean; port: number; adresse: string; laeuft: boolean; fehler: string | null; link: string }
 export interface TelegramLage { an: boolean; tokenDa: boolean; tokenGueltig: boolean; chat: string; bereit: boolean }
 export interface Cli { id: string; name: string; da: boolean; fortsetzenGenau: boolean }

@@ -912,13 +912,21 @@ function App() {
                 {p.art !== 'frage' && (
                   <div class="reihe">
                     <button class="knopf" onClick={async () => {
+                      if (p.art === 'dienst') {
+                        // Der Dialog zeigt Startbefehl und die Zeile fürs Briefing; bestätigt wird dort.
+                        if (raum?.projekt.id !== p.projektId) await waehleProjekt(p.projektId)
+                        const d = (await ruf<Dienst[]>('dienste', p.projektId)).find((x) => `dienst:${x.name}` === p.kennung)
+                        setEingangOffen(false)
+                        if (d) setDialog({ art: 'dienst-start', dienst: d })
+                        return
+                      }
                       if (raum?.projekt.id !== p.projektId) await waehleProjekt(p.projektId)
                       if (p.sitzung && p.art !== 'hinweis') waehleSitzung(p.sitzung)
                       // Eine Lieferung ohne Empfänger: die Datei mit Notiz und Pfaden rechts öffnen.
                       if (p.art === 'lieferung' && p.text) void ruf('zeigeDatei', p.projektId, p.text).catch(() => undefined)
                       if (p.art === 'schlange' && p.sitzung) void ruf('jetztZustellen', p.sitzung)
                       setEingangOffen(false)
-                    }}>{p.art === 'schlange' ? t('ui.eingang.jetzt') : t('ui.eingang.hin')}</button>
+                    }}>{p.art === 'schlange' ? t('ui.eingang.jetzt') : p.art === 'dienst' ? t('ui.eingang.pruefen') : t('ui.eingang.hin')}</button>
                     {p.art === 'lieferung' && <button class="knopf flach" onClick={() => void ruf('anfrageGesehen', p.projektId, p.kennung).then(ladeEingang)}>{t('ui.eingang.gesehen')}</button>}
                     {p.art === 'hinweis' && <button class="knopf flach" onClick={() => { setHinweise((hs) => hs.filter((x) => x.id !== p.kennung)); void ruf('hinweisGesehen', p.projektId, p.kennung) }}>{t('ui.eingang.gesehen')}</button>}
                   </div>

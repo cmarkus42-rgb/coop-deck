@@ -369,10 +369,13 @@ test('Gemeinsame Dienste: erst nach Bestätigung im Briefing aller Sessions; ge�
     // Unbestätigt: kein Briefing nennt ihn, auch das eigene nicht.
     assert.equal(deck.gemeinsameDienste().length, 0)
     assert.ok(!deck.briefing(anderes, s).includes('Messdienst'))
+    // Im Eingang des Decks steht, dass er auf die Bestätigung wartet.
+    assert.deepEqual(deck.eingang().filter((e) => e.art === 'dienst').map((e) => [e.projekt, e.titel]), [['p-dienste', 'Messdienst']])
     assert.match((await deck.befehl(['dienst', 'liste'], k)).aus, /Messdienst\tnicht bestätigt/)
     assert.equal((await deck.befehl(['dienst', 'starte', 'Messdienst'], k)).code, 1, 'eine Session bestätigt nichts')
 
     await deck.dienstStarten(p.id, 'Messdienst', true)
+    assert.equal(deck.eingang().filter((e) => e.art === 'dienst').length, 0)
     const brief = deck.briefing(anderes, s)
     assert.match(brief, /Dienste auf diesem Rechner/)
     assert.match(brief, /- Messdienst \(http:\/\/127\.0\.0\.1:9, aus dem Projekt p-dienste\): Maße aus einem Foto\. rm -rf Wie man ihn benutzt: `curl -s http:\/\/127\.0\.0\.1:9\/hilfe`/)
