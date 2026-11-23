@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Coop Deck">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#2a4852">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#dde5d6">
+<title>Coop Deck</title>
+<link rel="stylesheet" href="stil.css">
+</head>
+<body>
+<header><h1 id="titel"></h1><span id="lage" role="status"></span></header>
+<main>
+  <h2 id="wartetTitel" class="abschnitt" hidden></h2>
+  <div id="eingang"></div>
+  <h2 id="lieferTitel" class="abschnitt" hidden></h2>
+  <div id="liste"></div>
+  <p id="leer" hidden></p>
+  <button id="frei" class="knopf breit" type="button"></button>
+  <form id="freiForm" class="karte" hidden>
+    <label><span id="freiTitelText"></span><input id="freiTitel" type="text" maxlength="120" autocomplete="off" required></label>
+    <label><span id="freiProjektText"></span><select id="freiProjekt"></select></label>
+    <label><span id="freiSitzungText"></span><select id="freiSitzung"></select></label>
+    <div class="knoepfe">
+      <button id="freiAbbrechen" class="knopf" type="button"></button>
+      <button id="freiAnlegen" class="knopf haupt" type="submit"></button>
+    </div>
+  </form>
+</main>
+<script src="texte.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

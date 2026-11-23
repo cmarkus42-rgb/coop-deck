@@ -1,0 +1,25 @@
+Coop Deck
+Copyright (c) 2026 Christian Markus and Coop Deck contributors
+
+This software is distributed under the MIT License. See LICENSE for details.
+
+Parts taken from other projects
+
+- src/core/tmux/parser.ts: tmux control-mode parser from cipher-mux-electron
+  (MIT, Copyright (c) 2026 Christian Markus and cipher-mux contributors).
+
+Third-party software shipped with the app
+
+- electron 45.4.1 (MIT)
+- preact 11.2.0 (MIT)
+- @xterm/xterm 6.0.0 (MIT)
+- @xterm/addon-fit 0.11.0 (MIT)
+- @xterm/addon-web-links 0.12.0 (MIT)
+- marked 18.2.1 (MIT)
+- @fontsource/pixelify-sans 5.3.0 (OFL-1.1)
+- @fontsource/atkinson-hyperlegible-next 5.3.0 (OFL-1.1)
+- @fontsource/jetbrains-mono 5.3.0 (OFL-1.1)
+
+The font packages (@fontsource/*) carry the fonts Pixelify Sans, Atkinson
+Hyperlegible Next and JetBrains Mono under the SIL Open Font License 1.1.
+The license texts are in the respective package folders under node_modules.

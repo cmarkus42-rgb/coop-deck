@@ -1,0 +1,9 @@
+.dok .block { margin: 0; padding: 1px 6px; margin-left: -6px; margin-right: -6px; }
+.dok .block > :first-child { margin-top: 0; }
+.dok .b-heading { margin-top: 22px; }
+.dok .b-heading h1 { margin-top: 0; }
+.dok ul, .dok ol { margin: 4px 0 10px; padding-left: 22px; max-width: 74ch; }
+.dok li { margin: 2px 0; }
+.dok table { font-size: 14px; }
+.dok footer { margin-top: 40px; border-top: 2px solid var(--kante); padding-top: 8px; }
+.dok img { max-width: 100%; }

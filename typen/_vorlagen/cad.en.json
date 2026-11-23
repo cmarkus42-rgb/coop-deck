@@ -1,0 +1,67 @@
+{
+  "name": "CAD",
+  "zweck": "Part or assembly: dimensions and constraints as a questionnaire, roadmap from design to print.",
+  "git": false,
+  "artefakte": [
+    {
+      "typ": "projektblatt",
+      "titel": "Project sheet"
+    },
+    {
+      "typ": "fragebogen",
+      "titel": "Dimensions and constraints",
+      "daten": {
+        "einleitung": "Every value needs a unit and an origin: measured or estimated.",
+        "fragen": [
+          {
+            "id": "F1",
+            "frage": "Which dimensions are fixed (connection, installation space, mating part)?",
+            "kontext": "Measured values go into the project sheet as facts.",
+            "antwort": ""
+          },
+          {
+            "id": "F2",
+            "frage": "Which material and which process (printer, nozzle, layer height)?",
+            "kontext": "Determines wall thicknesses and tolerances.",
+            "antwort": ""
+          },
+          {
+            "id": "F3",
+            "frage": "What load or stress does the part have to withstand?",
+            "kontext": "Determines orientation and infill.",
+            "antwort": ""
+          },
+          {
+            "id": "F4",
+            "frage": "What may be visible and what may not (supports, seams, screws)?",
+            "kontext": "Helps determine the print direction.",
+            "antwort": ""
+          }
+        ]
+      }
+    },
+    {
+      "typ": "roadmap",
+      "titel": "Roadmap",
+      "daten": {
+        "meilensteine": [
+          {
+            "id": "M1",
+            "titel": "Design",
+            "ziel": "Dimensions settled, first model"
+          },
+          {
+            "id": "M2",
+            "titel": "Test print",
+            "ziel": "Fits the mating part"
+          },
+          {
+            "id": "M3",
+            "titel": "Finished",
+            "ziel": "Printed and installed"
+          }
+        ]
+      }
+    }
+  ]
+}

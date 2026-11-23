@@ -1,0 +1,18 @@
+.kopfzahlen { display: flex; gap: 14px; flex-wrap: wrap; margin: 8px 0 4px; }
+.befund { border: 2px solid var(--kante); border-left-width: 6px; background: var(--grund); margin-top: 10px; padding: 8px 12px 10px; }
+.befund.w-kritisch { border-left-color: var(--rot); }
+.befund.w-hoch { border-left-color: var(--magenta); }
+.befund.w-mittel { border-left-color: var(--gelb); }
+.befund.w-niedrig { border-left-color: var(--kante-stark); }
+.befund.zu .titel { color: var(--leise); }
+.befund.s-abgelehnt .titel { text-decoration: line-through; }
+.befund header { display: flex; align-items: center; gap: 10px; }
+.befund .id { color: var(--leise); flex: none; }
+.befund .titel { flex: 1; font-weight: 600; }
+.befund .schwere { flex: none; padding: 1px 6px; border: 2px solid currentColor; }
+.befund .schwere.w-kritisch { color: var(--rot); } .befund .schwere.w-hoch { color: var(--magenta); }
+.befund .schwere.w-mittel { color: var(--gelb); } .befund .schwere.w-niedrig { color: var(--leise); }
+.befund select.feld { width: auto; flex: none; padding: 3px 6px; font-family: 'Pixelify Sans'; font-size: 14px; }
+.befund .knopf { flex: none; white-space: nowrap; }
+.befund p { margin: 6px 0 0; white-space: pre-wrap; }
+.befund .vorschlag b { font-family: 'Pixelify Sans'; font-weight: 400; color: var(--mint); }

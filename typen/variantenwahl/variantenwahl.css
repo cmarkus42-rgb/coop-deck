@@ -1,0 +1,10 @@
+.varianten { display: grid; gap: 12px; margin-top: 14px; }
+.variante { border: 2px solid var(--kante); background: var(--grund); padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.variante.gewaehlt { border-color: var(--mint); box-shadow: 4px 4px 0 var(--schatten); }
+.variante h2 { margin: 0; font-size: 18px; }
+.variante h2 .id { color: var(--magenta); }
+.variante img { width: 100%; border: 2px solid var(--kante); }
+.variante iframe { width: 100%; height: 340px; border: 2px solid var(--kante); background: var(--wanne); }
+.variante p { margin: 0; flex: 1; }
+footer.senden { display: flex; gap: 12px; align-items: flex-end; margin-top: 18px; }
+footer.senden .knopf { flex: none; }

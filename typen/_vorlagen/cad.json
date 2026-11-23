@@ -1,0 +1,67 @@
+{
+  "name": "CAD",
+  "zweck": "Bauteil oder Baugruppe: Maße und Randbedingungen als Fragebogen, Roadmap vom Entwurf bis zum Druck.",
+  "git": false,
+  "artefakte": [
+    {
+      "typ": "projektblatt",
+      "titel": "Projektblatt"
+    },
+    {
+      "typ": "fragebogen",
+      "titel": "Maße und Randbedingungen",
+      "daten": {
+        "einleitung": "Jeder Wert braucht Einheit und Herkunft: gemessen oder geschätzt.",
+        "fragen": [
+          {
+            "id": "F1",
+            "frage": "Welche Maße sind fest vorgegeben (Anschluss, Bauraum, Gegenstück)?",
+            "kontext": "Gemessene Werte gehen als Fakt ins Projektblatt.",
+            "antwort": ""
+          },
+          {
+            "id": "F2",
+            "frage": "Welches Material und welches Verfahren (Drucker, Düse, Schichthöhe)?",
+            "kontext": "Bestimmt Wandstärken und Toleranzen.",
+            "antwort": ""
+          },
+          {
+            "id": "F3",
+            "frage": "Welche Last oder Beanspruchung muss das Teil aushalten?",
+            "kontext": "Entscheidet über Ausrichtung und Füllung.",
+            "antwort": ""
+          },
+          {
+            "id": "F4",
+            "frage": "Was darf sichtbar sein, was nicht (Stützen, Nähte, Schrauben)?",
+            "kontext": "Legt die Druckrichtung mit fest.",
+            "antwort": ""
+          }
+        ]
+      }
+    },
+    {
+      "typ": "roadmap",
+      "titel": "Roadmap",
+      "daten": {
+        "meilensteine": [
+          {
+            "id": "M1",
+            "titel": "Entwurf",
+            "ziel": "Maße geklärt, erstes Modell"
+          },
+          {
+            "id": "M2",
+            "titel": "Probedruck",
+            "ziel": "Passt am Gegenstück"
+          },
+          {
+            "id": "M3",
+            "titel": "Fertig",
+            "ziel": "Gedruckt und eingebaut"
+          }
+        ]
+      }
+    }
+  ]
+}

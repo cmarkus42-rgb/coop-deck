@@ -1,0 +1,25 @@
+{
+  "name": "Konzept",
+  "zweck": "Text, Plan oder Entscheidung: das Konzept als Dokument, offene Fragen als Fragebogen.",
+  "git": false,
+  "artefakte": [
+    {
+      "typ": "projektblatt",
+      "titel": "Projektblatt"
+    },
+    {
+      "typ": "dokument",
+      "titel": "Konzept",
+      "quelle": "Konzept.md",
+      "text": "# {{name}}\n\n## Worum es geht\n\n…\n\n## Vorschlag\n\n…\n\n## Was dagegen spricht\n\n…\n\n## Nächster Schritt\n\n…\n"
+    },
+    {
+      "typ": "fragebogen",
+      "titel": "Offene Fragen",
+      "daten": {
+        "einleitung": "Nur Fragen, deren Antwort das Konzept ändert.",
+        "fragen": []
+      }
+    }
+  ]
+}

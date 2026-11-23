@@ -1,0 +1,65 @@
+/* Coop Deck — Gestaltungsfundament der Artefakte. Folgt dem Thema des Decks (UI-07c). */
+@font-face { font-family: 'Pixelify Sans'; font-weight: 400; src: url('/lib/fonts/pixelify-sans-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Pixelify Sans'; font-weight: 600; src: url('/lib/fonts/pixelify-sans-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Atkinson Next'; font-weight: 400; src: url('/lib/fonts/atkinson-hyperlegible-next-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Atkinson Next'; font-weight: 600; src: url('/lib/fonts/atkinson-hyperlegible-next-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-weight: 400; src: url('/lib/fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2'); }
+/* Ziffern der Rasterschrift kommen aus der Festbreitenschrift: in Pixelify Sans liest sich die 5 wie ein S (V6: gut lesbar). */
+@font-face { font-family: 'Pixelify Sans'; font-weight: 400; src: url('/lib/fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2'); unicode-range: U+30-39; }
+@font-face { font-family: 'Pixelify Sans'; font-weight: 600; src: url('/lib/fonts/jetbrains-mono-latin-700-normal.woff2') format('woff2'); unicode-range: U+30-39; }
+
+:root {
+  --grund: #305560; --wanne: #2a4852; --flaeche: #396370; --flaeche-hoch: #447381; --kante: #5a8b97; --kante-stark: #8fbfc7;
+  --text: #f1ead9; --leise: #c8dedc; --magenta: #ff5fc0; --mint: #5cf2d6; --gelb: #f6e84a; --rot: #ff7a6b; --auf-neon: #1b2f36; --schatten: #1c333b;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --grund: #cfd8c8; --wanne: #dde5d6; --flaeche: #c2ccba; --flaeche-hoch: #b4c0ac; --kante: #8a9c88; --kante-stark: #56695a;
+    --text: #1e2f2a; --leise: #47594f; --magenta: #a80f68; --mint: #00635a; --gelb: #6f5200; --rot: #a3261c; --auf-neon: #eef3e6; --schatten: #9aa996;
+    color-scheme: light;
+  }
+}
+* { box-sizing: border-box; }
+html { background: var(--wanne); }
+body { margin: 0; color: var(--text); font: 15px/1.55 'Atkinson Next', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+.blatt { max-width: 880px; margin: 0 auto; padding: 28px 28px 80px; }
+.blatt.weit { max-width: 1180px; }
+h1, h2, h3, .pixel { font-family: 'Pixelify Sans', sans-serif; font-weight: 400; letter-spacing: 0.02em; line-height: 1.2; }
+h1 { font-size: 30px; margin: 0 0 6px; }
+h2 { font-size: 21px; margin: 30px 0 8px; }
+h3 { font-size: 17px; margin: 20px 0 6px; }
+p { margin: 0 0 10px; max-width: 74ch; }
+a { color: var(--mint); }
+code, pre, .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; }
+code { background: var(--flaeche); padding: 1px 4px; }
+pre { background: var(--flaeche); border: 2px solid var(--kante); padding: 10px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 8px 0 14px; }
+th, td { border: 2px solid var(--kante); padding: 5px 9px; text-align: left; vertical-align: top; }
+th { background: var(--flaeche); font-family: 'Pixelify Sans'; font-weight: 400; }
+blockquote { margin: 8px 0; padding: 2px 12px; border-left: 4px solid var(--kante-stark); color: var(--leise); }
+hr { border: 0; height: 2px; background: var(--kante); margin: 22px 0; }
+.leise { color: var(--leise); }
+
+.knopf { font-family: 'Pixelify Sans'; font-size: 14px; line-height: 1; padding: 6px 10px; cursor: pointer; background: var(--flaeche-hoch); color: var(--text); border: 2px solid var(--kante); box-shadow: 2px 2px 0 var(--schatten); }
+.knopf:hover { border-color: var(--kante-stark); }
+.knopf:active { transform: translate(2px, 2px); box-shadow: none; }
+.knopf:focus-visible, .feld:focus-visible { outline: 2px solid var(--mint); outline-offset: 1px; }
+.knopf.haupt { background: var(--magenta); border-color: var(--magenta); color: var(--auf-neon); font-weight: 600; }
+.knopf.an { background: var(--mint); border-color: var(--mint); color: var(--auf-neon); }
+.knopf.flach { box-shadow: none; background: transparent; border-color: transparent; }
+.knopf.flach:hover { border-color: var(--kante); }
+.feld { font: inherit; color: var(--text); background: var(--wanne); border: 2px solid var(--kante); padding: 5px 8px; width: 100%; }
+textarea.feld { resize: vertical; }
+.led { display: inline-block; width: 8px; height: 8px; background: var(--kante); flex: none; }
+.led.arbeitet { background: var(--mint); } .led.wartet { background: var(--gelb); } .led.ruhig { background: var(--kante-stark); }
+.led.beendet { background: transparent; outline: 2px solid var(--kante); outline-offset: -2px; }
+
+/* Wohin der Agent zeigt (coop zeigen --ref …). */
+.coop-blick { outline: 3px solid var(--magenta); outline-offset: 3px; animation: coop-blick 0.8s steps(2, jump-none) 3; }
+@keyframes coop-blick { 50% { outline-color: var(--gelb); } }
+@media (prefers-reduced-motion: reduce) { .coop-blick { animation: none; } }
+.fehlerkasten { margin: 12px; padding: 10px 12px; border: 2px solid var(--rot); background: var(--flaeche); }
+.fehlerkasten b { font-family: 'Pixelify Sans'; font-weight: 400; color: var(--rot); display: block; margin-bottom: 4px; }
+::-webkit-scrollbar { width: 10px; height: 10px; } ::-webkit-scrollbar-thumb { background: var(--kante); }

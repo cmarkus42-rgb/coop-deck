@@ -1,0 +1,28 @@
+name: Prüfen
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pruefen:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # Die Tests starten echte Sessions in einem eigenen tmux-Server.
+      - if: runner.os == 'macOS'
+        run: brew install tmux
+      - if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y tmux
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build

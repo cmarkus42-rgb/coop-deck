@@ -1,0 +1,74 @@
+{
+  "name": "Web design",
+  "zweck": "Site or interface: briefing as a questionnaire, design direction as a variant choice, roadmap.",
+  "git": true,
+  "artefakte": [
+    {
+      "typ": "projektblatt",
+      "titel": "Project sheet"
+    },
+    {
+      "typ": "fragebogen",
+      "titel": "Briefing",
+      "daten": {
+        "einleitung": "The answers determine tone, structure and scope of the site.",
+        "fragen": [
+          {
+            "id": "F1",
+            "frage": "Who is the site for, and what should someone do there first?",
+            "kontext": "Determines structure and home page.",
+            "antwort": ""
+          },
+          {
+            "id": "F2",
+            "frage": "Which content already exists (texts, images, logo), and what is missing?",
+            "kontext": "What is missing becomes a placeholder or its own item in the roadmap.",
+            "antwort": ""
+          },
+          {
+            "id": "F3",
+            "frage": "Which three sites do you like, and what do you like about them?",
+            "kontext": "A guide for the design direction.",
+            "antwort": ""
+          },
+          {
+            "id": "F4",
+            "frage": "Where will the site run later (host, domain, site builder)?",
+            "kontext": "Determines the technology.",
+            "antwort": ""
+          }
+        ]
+      }
+    },
+    {
+      "typ": "variantenwahl",
+      "titel": "Design direction",
+      "daten": {
+        "frage": "Which direction fits?"
+      }
+    },
+    {
+      "typ": "roadmap",
+      "titel": "Roadmap",
+      "daten": {
+        "meilensteine": [
+          {
+            "id": "M1",
+            "titel": "Design",
+            "ziel": "Direction chosen, home page in place"
+          },
+          {
+            "id": "M2",
+            "titel": "Build-out",
+            "ziel": "All pages, checked on phone and desktop"
+          },
+          {
+            "id": "M3",
+            "titel": "Go-live",
+            "ziel": "Reachable at the domain"
+          }
+        ]
+      }
+    }
+  ]
+}

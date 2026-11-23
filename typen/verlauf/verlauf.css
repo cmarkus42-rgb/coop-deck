@@ -1,0 +1,24 @@
+.wahl { display: flex; gap: 8px; margin: 10px 0 4px; }
+.rm { border: 2px solid var(--kante); border-left-width: 6px; background: var(--grund); margin-top: 12px; padding: 10px 12px; }
+.rm.s-offen { border-left-color: var(--gelb); }
+.rm.s-zugestellt { border-left-color: var(--mint); }
+.rm.s-erledigt { border-left-color: var(--magenta); }
+.rm header { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.rm .stand { padding: 1px 6px; border: 2px solid var(--kante); }
+.rm .stand.s-offen { color: var(--gelb); border-color: var(--gelb); }
+.rm .stand.s-zugestellt { color: var(--mint); border-color: var(--mint); }
+.rm .stand.s-erledigt { color: var(--magenta); border-color: var(--magenta); }
+.rm .zeit { font-weight: 600; }
+.rm .kennung { margin-left: auto; }
+.rm .notiz { margin: 8px 0 0; white-space: pre-wrap; }
+.rm .marken { margin: 8px 0 0; padding-left: 26px; }
+.rm .erledigt { margin-top: 10px; padding: 8px 10px; background: var(--flaeche); border-top: 2px solid var(--magenta); }
+.rm .erledigt b { font-weight: 400; color: var(--magenta); }
+.rm .erledigt p { margin: 4px 0 0; white-space: pre-wrap; }
+.bilder { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 10px; }
+.bild { margin: 0; }
+.bild figcaption { color: var(--leise); margin-bottom: 4px; }
+.bild img { display: block; width: 100%; border: 2px solid var(--kante); cursor: zoom-in; image-rendering: auto; }
+.bild.leer div { border: 2px dashed var(--kante); padding: 24px; text-align: center; }
+.gross { position: fixed; inset: 0; z-index: 10; background: color-mix(in srgb, var(--wanne) 88%, transparent); display: flex; align-items: center; justify-content: center; padding: 20px; cursor: zoom-out; }
+.gross img { max-width: 100%; max-height: 100%; border: 2px solid var(--kante-stark); }

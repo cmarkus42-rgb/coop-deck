@@ -1,0 +1,11 @@
+.frage { border: 2px solid var(--kante); border-left: 6px solid var(--gelb); background: var(--grund); padding: 10px 12px; margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.frage.beantwortet { border-left-color: var(--mint); }
+.frage h2 { margin: 0; font: 600 16px/1.4 'Atkinson Next', sans-serif; letter-spacing: 0; }
+.frage h2 .id { font-family: 'Pixelify Sans'; font-weight: 400; }
+.frage h2 .id { color: var(--leise); }
+.frage p { margin: 0; }
+.optionen { display: flex; gap: 6px; flex-wrap: wrap; }
+.vorschlag { display: flex; gap: 10px; align-items: center; background: var(--flaeche); padding: 6px 8px; }
+.vorschlag span { flex: 1; }
+.vorschlag b { font-weight: 400; color: var(--mint); }
+footer.senden { display: flex; align-items: center; gap: 12px; margin-top: 20px; justify-content: flex-end; }

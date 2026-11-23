@@ -1,0 +1,1 @@
+A document shows a Markdown file of the project (`quelle`, the source, in `artefakt.json`). You edit the file; the view reloads on its own. The marks from {{name}} name file and line. Reference for `--ref`: `datei:<path>:<line>` (the line where the paragraph, list item or table row begins).

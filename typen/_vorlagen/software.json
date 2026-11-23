@@ -1,0 +1,35 @@
+{
+  "name": "Software",
+  "zweck": "Programm, Dienst oder Werkzeug: Anforderungen, Roadmap in Stufen, Projektblatt.",
+  "git": true,
+  "artefakte": [
+    {
+      "typ": "projektblatt",
+      "titel": "Projektblatt"
+    },
+    {
+      "typ": "roadmap",
+      "titel": "Roadmap",
+      "daten": {
+        "meilensteine": [
+          {
+            "id": "M1",
+            "titel": "Stufe 1",
+            "ziel": "Erste lauffähige Fassung, an einem echten Fall benutzt"
+          },
+          {
+            "id": "M2",
+            "titel": "Stufe 2",
+            "ziel": "Ausbau nach dem ersten Alltag"
+          }
+        ]
+      }
+    },
+    {
+      "typ": "dokument",
+      "titel": "Anforderungen",
+      "quelle": "Anforderungen.md",
+      "text": "# Anforderungen: {{name}}\n\nStufe 1 = erste benutzbare Fassung, Stufe 2 = Ausbau.\n\n| ID | Anforderung | Stufe |\n|---|---|---|\n| A-01 | … | 1 |\n\n## Nicht Teil davon\n\n- …\n"
+    }
+  ]
+}

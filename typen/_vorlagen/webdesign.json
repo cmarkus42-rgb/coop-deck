@@ -1,0 +1,74 @@
+{
+  "name": "Webdesign",
+  "zweck": "Seite oder Oberfläche: Briefing als Fragebogen, Gestaltungsrichtung als Variantenwahl, Roadmap.",
+  "git": true,
+  "artefakte": [
+    {
+      "typ": "projektblatt",
+      "titel": "Projektblatt"
+    },
+    {
+      "typ": "fragebogen",
+      "titel": "Briefing",
+      "daten": {
+        "einleitung": "Die Antworten bestimmen Ton, Aufbau und Umfang der Seite.",
+        "fragen": [
+          {
+            "id": "F1",
+            "frage": "Für wen ist die Seite, und was soll jemand dort als Erstes tun?",
+            "kontext": "Bestimmt Aufbau und Startseite.",
+            "antwort": ""
+          },
+          {
+            "id": "F2",
+            "frage": "Welche Inhalte gibt es schon (Texte, Bilder, Logo), was fehlt?",
+            "kontext": "Fehlendes wird Platzhalter oder eigener Punkt in der Roadmap.",
+            "antwort": ""
+          },
+          {
+            "id": "F3",
+            "frage": "Welche drei Seiten gefallen dir, und was daran?",
+            "kontext": "Anhalt für die Gestaltungsrichtung.",
+            "antwort": ""
+          },
+          {
+            "id": "F4",
+            "frage": "Wo läuft die Seite später (Hoster, Domain, Baukasten)?",
+            "kontext": "Legt die Technik fest.",
+            "antwort": ""
+          }
+        ]
+      }
+    },
+    {
+      "typ": "variantenwahl",
+      "titel": "Gestaltungsrichtung",
+      "daten": {
+        "frage": "Welche Richtung trifft es?"
+      }
+    },
+    {
+      "typ": "roadmap",
+      "titel": "Roadmap",
+      "daten": {
+        "meilensteine": [
+          {
+            "id": "M1",
+            "titel": "Entwurf",
+            "ziel": "Richtung gewählt, Startseite steht"
+          },
+          {
+            "id": "M2",
+            "titel": "Ausbau",
+            "ziel": "Alle Seiten, Telefon und Desktop geprüft"
+          },
+          {
+            "id": "M3",
+            "titel": "Livegang",
+            "ziel": "Unter der Domain erreichbar"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,292 @@
+/*
+ * Coop Deck — Gestaltung.
+ * Ein Gerät aus einer Neonwelt: Gehäuse in Petrol, harte Kanten, Rasterschrift für
+ * Beschriftungen, Leuchtpixel für Zustände. Nacht = Neonschild, Tag = LCD im Tageslicht.
+ * Keine reinen Schwarz- oder Weißflächen (UI-07a). Neon ist Signal, nicht Fläche (UI-07b).
+ */
+@font-face { font-family: 'Pixelify Sans'; font-weight: 400; src: url('../../node_modules/@fontsource/pixelify-sans/files/pixelify-sans-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Pixelify Sans'; font-weight: 600; src: url('../../node_modules/@fontsource/pixelify-sans/files/pixelify-sans-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Atkinson Next'; font-weight: 400; src: url('../../node_modules/@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Atkinson Next'; font-weight: 600; src: url('../../node_modules/@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-weight: 400; src: url('../../node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-weight: 700; src: url('../../node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-700-normal.woff2') format('woff2'); }
+/* Ziffern der Rasterschrift kommen aus der Festbreitenschrift: in Pixelify Sans liest sich die 5 wie ein S (V6: gut lesbar). */
+@font-face { font-family: 'Pixelify Sans'; font-weight: 400; src: url('../../node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2') format('woff2'); unicode-range: U+30-39; }
+@font-face { font-family: 'Pixelify Sans'; font-weight: 600; src: url('../../node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-700-normal.woff2') format('woff2'); unicode-range: U+30-39; }
+
+:root, :root[data-thema='dunkel'] {
+  --grund: #305560;
+  --wanne: #2a4852;
+  --flaeche: #396370;
+  --flaeche-hoch: #447381;
+  --kante: #5a8b97;
+  --kante-stark: #8fbfc7;
+  --text: #f1ead9;
+  --leise: #c8dedc;
+  --magenta: #ff5fc0;
+  --mint: #5cf2d6;
+  --gelb: #f6e84a;
+  --rot: #ff7a6b;
+  --auf-neon: #1b2f36;
+  --schatten: #1c333b;
+  color-scheme: dark;
+}
+:root[data-thema='hell'] {
+  --grund: #cfd8c8;
+  --wanne: #dde5d6;
+  --flaeche: #c2ccba;
+  --flaeche-hoch: #b4c0ac;
+  --kante: #8a9c88;
+  --kante-stark: #56695a;
+  --text: #1e2f2a;
+  --leise: #47594f;
+  --magenta: #a80f68;
+  --mint: #00635a;
+  --gelb: #6f5200;
+  --rot: #a3261c;
+  --auf-neon: #eef3e6;
+  --schatten: #9aa996;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--grund); color: var(--text);
+  font: 14px/1.45 'Atkinson Next', system-ui, sans-serif;
+  overflow: hidden; user-select: none; -webkit-font-smoothing: antialiased;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+.pixel { font-family: 'Pixelify Sans', 'Atkinson Next', sans-serif; font-weight: 400; letter-spacing: 0.02em; }
+.mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; }
+.leise { color: var(--leise); }
+
+/* Raster des Geräts: 2px-Kanten, keine Rundungen, gekerbte Ecken. */
+.kerbe { clip-path: polygon(0 4px, 4px 4px, 4px 0, calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px, 100% 100%, 0 100%); }
+.raster { background-image: repeating-conic-gradient(var(--kante) 0% 25%, transparent 0% 50%); background-size: 4px 4px; }
+
+#app { display: grid; grid-template-rows: 44px 1fr 28px; height: 100vh; }
+
+/* --- Kopf ---------------------------------------------------------------- */
+.kopf {
+  display: flex; align-items: center; gap: 12px; padding: 0 12px;
+  background: var(--flaeche); border-bottom: 2px solid var(--kante); -webkit-app-region: drag;
+}
+/* macOS: links sitzen die Ampelknöpfe in der Kopfzeile. Anderswo zeichnet das System den Rahmen. */
+[data-system='mac'] .kopf { padding-left: 84px; }
+.kopf > * { -webkit-app-region: no-drag; }
+.kopf .marke { font-family: 'Pixelify Sans'; font-size: 20px; font-weight: 600; -webkit-app-region: drag; }
+.kopf .marke i { font-style: normal; color: var(--magenta); }
+.kopf .projektname { font-family: 'Pixelify Sans'; font-size: 16px; color: var(--leise); -webkit-app-region: drag; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kopf .frei { flex: 1; align-self: stretch; -webkit-app-region: drag; }
+
+.knopf {
+  font-family: 'Pixelify Sans'; font-size: 14px; line-height: 1; padding: 6px 10px; cursor: pointer;
+  background: var(--flaeche-hoch); color: var(--text); border: 2px solid var(--kante); border-radius: 0;
+  box-shadow: 2px 2px 0 var(--schatten);
+}
+.knopf:hover { border-color: var(--kante-stark); }
+.knopf:active { transform: translate(2px, 2px); box-shadow: none; }
+.knopf:focus-visible, .feld:focus-visible, .reiter:focus-visible { outline: 2px solid var(--mint); outline-offset: 1px; }
+.knopf.an { background: var(--mint); color: var(--auf-neon); border-color: var(--mint); }
+.knopf.haupt { background: var(--magenta); color: var(--auf-neon); border-color: var(--magenta); font-weight: 600; }
+.knopf.flach { box-shadow: none; background: transparent; border-color: transparent; padding: 4px 6px; }
+.knopf.flach:hover { border-color: var(--kante); }
+.knopf:disabled { opacity: 0.45; cursor: default; }
+.gruppe { display: inline-flex; }
+.gruppe .knopf { box-shadow: none; margin-left: -2px; }
+.gruppe .knopf:first-child { margin-left: 0; }
+.zaehler { display: inline-block; min-width: 18px; padding: 0 4px; margin-left: 6px; background: var(--gelb); color: var(--auf-neon); font-family: 'Pixelify Sans'; text-align: center; }
+
+.feld {
+  background: var(--wanne); border: 2px solid var(--kante); border-radius: 0; padding: 5px 8px; color: var(--text);
+  user-select: text; min-width: 0;
+}
+.feld::placeholder { color: var(--leise); opacity: 0.8; }
+textarea.feld { resize: vertical; line-height: 1.4; }
+select.feld { padding: 4px 6px; }
+
+/* Leuchtpixel: der Zustand einer Session auf einen Blick. */
+.led { display: inline-block; width: 8px; height: 8px; flex: none; background: var(--kante); }
+.led.arbeitet { background: var(--mint); box-shadow: 0 0 0 2px color-mix(in srgb, var(--mint) 30%, transparent); animation: blink 1s steps(2, jump-none) infinite; }
+.led.ruhig { background: var(--kante-stark); }
+.led.wartet { background: var(--gelb); box-shadow: 0 0 0 2px color-mix(in srgb, var(--gelb) 35%, transparent); }
+.led.fertig { background: var(--magenta); box-shadow: 0 0 0 2px color-mix(in srgb, var(--magenta) 35%, transparent); }
+.led.beendet { background: transparent; outline: 2px solid var(--kante); outline-offset: -2px; }
+.led.an { background: var(--mint); }
+.led.aus { background: transparent; outline: 2px solid var(--kante-stark); outline-offset: -2px; }
+@keyframes blink { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { .led.arbeitet { animation: none; } }
+
+/* --- Bühne --------------------------------------------------------------- */
+.buehne { display: flex; min-height: 0; }
+.leiste { width: 232px; flex: none; display: flex; flex-direction: column; background: var(--flaeche); border-right: 2px solid var(--kante); min-height: 0; }
+.leiste header { padding: 8px; display: flex; gap: 6px; }
+.leiste header .feld { flex: 1; }
+.leiste .liste { flex: 1; overflow-y: auto; padding: 0 0 8px; }
+.leiste .abschnitt { font-family: 'Pixelify Sans'; font-size: 13px; color: var(--leise); padding: 8px 10px 2px; }
+.projekt { display: flex; align-items: center; gap: 6px; padding: 5px 8px 5px 10px; cursor: pointer; border-left: 4px solid transparent; }
+.projekt:hover { background: var(--flaeche-hoch); }
+.projekt.aktiv { background: var(--wanne); border-left-color: var(--magenta); }
+.projekt .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.projekt .stern { font-family: 'Pixelify Sans'; color: var(--kante-stark); background: none; border: 0; cursor: pointer; padding: 0 2px; visibility: hidden; }
+.projekt:hover .stern, .projekt .stern.an { visibility: visible; }
+.projekt .stern.an { color: var(--gelb); }
+.leiste footer { padding: 8px; border-top: 2px solid var(--kante); display: flex; gap: 6px; flex-wrap: wrap; }
+
+.arbeitsflaeche { flex: 1; display: flex; min-width: 0; min-height: 0; }
+.bereich { display: flex; flex-direction: column; min-width: 0; min-height: 0; position: relative; }
+.teiler { width: 10px; flex: none; cursor: col-resize; background-color: var(--flaeche); border-left: 2px solid var(--kante); border-right: 2px solid var(--kante); }
+.teiler:hover { background-color: var(--flaeche-hoch); }
+
+/* Reiter als Steckmodule: gekerbte Ecke, Leuchtpixel, Neonstrich wenn aktiv. */
+.reiterleiste { display: flex; align-items: flex-end; gap: 2px; padding: 6px 6px 0; background: var(--flaeche); border-bottom: 2px solid var(--kante); min-height: 38px; overflow-x: auto; scrollbar-width: none; }
+.reiter {
+  display: flex; align-items: center; gap: 7px; max-width: 220px; padding: 6px 8px 5px 10px; cursor: pointer; flex: none;
+  font-family: 'Pixelify Sans'; font-size: 14px; color: var(--leise);
+  background: var(--flaeche-hoch); border: 0; border-bottom: 3px solid transparent; margin-bottom: -2px;
+  clip-path: polygon(0 4px, 4px 4px, 4px 0, calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px, 100% 100%, 0 100%);
+}
+.reiter:hover { color: var(--text); }
+.reiter.aktiv { background: var(--wanne); color: var(--text); border-bottom-color: var(--magenta); }
+.reiter .titel { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reiter .zu { background: none; border: 0; padding: 0 2px; cursor: pointer; color: var(--leise); font-family: 'Pixelify Sans'; font-size: 14px; }
+.reiter .zu:hover { color: var(--rot); }
+.reiter .art { font-size: 11px; color: var(--leise); }
+.reiterleiste .plus { margin: 0 0 4px 4px; position: sticky; right: 0; flex: none; }
+
+.inhalt { flex: 1; min-height: 0; position: relative; background: var(--wanne); }
+.terminal { position: absolute; inset: 0; padding: 8px 4px 4px 10px; }
+.terminal .xterm { height: 100%; }
+.terminal .xterm-viewport { background: transparent !important; }
+.ansichten { position: absolute; inset: 0; }
+.ansichten webview { position: absolute; inset: 0; width: 100%; height: 100%; visibility: hidden; background: var(--wanne); }
+.ansichten webview.vorn { visibility: visible; }
+.ansichten.zieht webview { pointer-events: none; }
+
+.werkzeugleiste { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px; background: var(--flaeche); border-bottom: 2px solid var(--kante); }
+.werkzeugleiste .adresse { flex: 1 1 200px; font-family: 'JetBrains Mono'; font-size: 12px; }
+.band { display: flex; align-items: center; gap: 10px; padding: 6px 10px; background: var(--wanne); border-bottom: 2px solid var(--mint); }
+.band .wer { font-family: 'Pixelify Sans'; color: var(--mint); flex: none; }
+.band .was { flex: 1; user-select: text; }
+
+.leer { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 12px; padding: 0 12%; }
+.leer h2 { font-family: 'Pixelify Sans'; font-weight: 400; font-size: 24px; margin: 0; }
+.leer p { margin: 0; max-width: 52ch; color: var(--leise); }
+.leer .reihe { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* --- Rückmeldung --------------------------------------------------------- */
+.rueck { border-top: 2px solid var(--magenta); background: var(--flaeche); max-height: 58%; display: flex; flex-direction: column; min-height: 0; }
+.rueck header { display: flex; align-items: center; gap: 8px; padding: 6px 8px; }
+.rueck header h3 { font-family: 'Pixelify Sans'; font-weight: 400; font-size: 15px; margin: 0; flex: 1; }
+.rueck .rumpf { overflow-y: auto; padding: 0 8px 8px; display: flex; flex-direction: column; gap: 6px; }
+.rueck .rumpf > * { flex: none; }
+.marke-zeile { display: grid; grid-template-columns: 24px 1fr 24px; gap: 6px; align-items: start; }
+.marke-zeile .nr { background: var(--magenta); color: var(--auf-neon); font-family: 'Pixelify Sans'; text-align: center; padding: 3px 0; }
+.marke-zeile .bezug { font-size: 12px; color: var(--leise); margin-top: 2px; user-select: text; overflow-wrap: anywhere; }
+.marke-zeile .bezug b { color: var(--text); font-weight: 600; }
+.marke-zeile .bezug .geschaetzt { color: var(--gelb); font-family: 'Pixelify Sans'; }
+.marke-zeile .feld { width: 100%; }
+.vorschau { white-space: pre-wrap; user-select: text; background: var(--wanne); border: 2px solid var(--kante); padding: 8px; font-family: 'JetBrains Mono'; font-size: 12px; line-height: 1.5; max-height: 220px; overflow: auto; }
+.rueck footer { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-top: 2px solid var(--kante); }
+.rueck footer .frei { flex: 1; }
+
+/* --- Fuß ----------------------------------------------------------------- */
+.fuss { display: flex; align-items: center; gap: 14px; padding: 0 10px; background: var(--flaeche); border-top: 2px solid var(--kante); font-size: 12px; white-space: nowrap; overflow: hidden; }
+.fuss .pfad { overflow: hidden; text-overflow: ellipsis; color: var(--leise); }
+.fuss .frei { flex: 1; }
+.fuss .dienst { display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; cursor: pointer; padding: 0; font-family: 'Pixelify Sans'; font-size: 13px; }
+.fuss .knopf { padding: 2px 6px; font-size: 12px; box-shadow: none; }
+.fuss select.feld { padding: 0 4px; font-size: 12px; border-width: 1px; }
+
+/* --- Schwebendes: Eingang, Menü, Dialog --------------------------------- */
+.schleier { position: fixed; inset: 0; z-index: 50; background: color-mix(in srgb, var(--schatten) 55%, transparent); display: flex; align-items: flex-start; justify-content: center; padding-top: 9vh; }
+.dialog { width: min(640px, 92vw); max-height: 82vh; display: flex; flex-direction: column; background: var(--flaeche); border: 2px solid var(--kante-stark); box-shadow: 6px 6px 0 var(--schatten); }
+.dialog.breit { width: min(860px, 94vw); }
+.dialog header { padding: 10px 12px; border-bottom: 2px solid var(--kante); display: flex; align-items: center; gap: 8px; }
+.dialog header h2 { font-family: 'Pixelify Sans'; font-weight: 400; font-size: 18px; margin: 0; flex: 1; }
+.dialog .rumpf { padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.dialog footer { padding: 10px 12px; border-top: 2px solid var(--kante); display: flex; gap: 8px; justify-content: flex-end; }
+.dialog label { display: flex; flex-direction: column; gap: 3px; font-size: 13px; color: var(--leise); }
+.dialog label .feld { color: var(--text); font-size: 14px; }
+.dialog .zeile { display: flex; gap: 10px; }
+.dialog label.haken { flex-direction: row; align-items: flex-start; gap: 8px; color: var(--text); font-size: 14px; cursor: pointer; }
+.dialog label.haken input { margin-top: 3px; accent-color: var(--magenta); }
+.dialog .zeile > * { flex: 1; }
+.dialog .fehler { color: var(--rot); user-select: text; }
+
+.menue { position: fixed; z-index: 60; min-width: 240px; max-width: 380px; max-height: 70vh; overflow-y: auto; background: var(--flaeche); border: 2px solid var(--kante-stark); box-shadow: 4px 4px 0 var(--schatten); padding: 4px 0; }
+.menue .punkt { display: flex; align-items: center; gap: 8px; width: 100%; padding: 6px 10px; background: none; border: 0; text-align: left; cursor: pointer; }
+.menue .punkt:hover { background: var(--flaeche-hoch); }
+.menue .punkt .neben { margin-left: auto; color: var(--leise); font-size: 12px; }
+.menue .trenner { height: 2px; background: var(--kante); margin: 4px 0; }
+.menue .abschnitt { font-family: 'Pixelify Sans'; font-size: 13px; color: var(--leise); padding: 4px 10px 2px; }
+
+.eingang { position: fixed; z-index: 55; top: 46px; right: 8px; width: min(440px, 92vw); max-height: 80vh; display: flex; flex-direction: column; background: var(--flaeche); border: 2px solid var(--kante-stark); box-shadow: 6px 6px 0 var(--schatten); }
+.eingang header { padding: 8px 10px; border-bottom: 2px solid var(--kante); display: flex; align-items: center; }
+.eingang header h2 { font-family: 'Pixelify Sans'; font-weight: 400; font-size: 17px; margin: 0; flex: 1; }
+.eingang .rumpf { overflow-y: auto; }
+.posten { padding: 10px; border-bottom: 2px solid var(--kante); display: flex; flex-direction: column; gap: 6px; }
+.posten:last-child { border-bottom: 0; }
+.posten .kopfzeile { display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--leise); }
+.posten .kopfzeile .art { font-family: 'Pixelify Sans'; font-size: 13px; color: var(--gelb); }
+.posten .titel { font-weight: 600; user-select: text; }
+.posten .text { color: var(--leise); user-select: text; }
+.posten .optionen { display: flex; flex-direction: column; gap: 4px; }
+.posten .option { text-align: left; display: flex; gap: 8px; align-items: baseline; }
+.posten .option span { font-family: 'Atkinson Next', sans-serif; font-size: 14px; line-height: 1.35; }
+.posten .option b { font-family: 'Pixelify Sans'; font-weight: 400; color: var(--magenta); }
+.posten .option.gewaehlt b { color: var(--auf-neon); }
+.posten .reihe { display: flex; gap: 6px; }
+.posten .reihe .feld { flex: 1; }
+
+.meldung { position: fixed; z-index: 70; left: 50%; bottom: 40px; transform: translateX(-50%); background: var(--flaeche-hoch); border: 2px solid var(--rot); box-shadow: 4px 4px 0 var(--schatten); padding: 8px 12px; max-width: 70vw; user-select: text; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--kante); }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Befehlspalette (UI-05) */
+.palette { width: min(680px, 92vw); max-height: 70vh; display: flex; flex-direction: column; background: var(--flaeche); border: 2px solid var(--kante-stark); box-shadow: 6px 6px 0 var(--schatten); }
+.palette > .feld { border: 0; border-bottom: 2px solid var(--kante); padding: 12px 14px; font-size: 17px; background: var(--wanne); }
+.palette > .feld:focus-visible { outline: none; border-bottom-color: var(--mint); }
+.palette .liste { overflow-y: auto; padding: 4px 0; }
+.palette .punkt { display: flex; align-items: center; gap: 10px; width: 100%; padding: 7px 14px; background: none; border: 0; border-left: 4px solid transparent; text-align: left; cursor: pointer; color: var(--text); font: inherit; }
+.palette .punkt.gewaehlt { background: var(--flaeche-hoch); border-left-color: var(--mint); }
+.palette .punkt .haupt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.palette .punkt .titel, .palette .punkt .text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.palette .punkt .text { color: var(--leise); font-size: 13px; }
+.palette .punkt .neben { flex: none; color: var(--leise); font-family: 'Pixelify Sans'; font-size: 13px; }
+.palette .leer { padding: 14px; color: var(--leise); }
+.palette footer { display: flex; gap: 16px; padding: 6px 14px; border-top: 2px solid var(--kante); color: var(--leise); font-size: 12px; }
+
+/* Neues Projekt aus Vorlage (PS-09) */
+.vorlagen { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.vorlage { display: flex; flex-direction: column; gap: 3px; text-align: left; padding: 8px 10px; cursor: pointer; background: var(--wanne); color: var(--text); border: 2px solid var(--kante); font: inherit; }
+.vorlage b { font-family: 'Pixelify Sans'; font-weight: 400; font-size: 16px; }
+.vorlage span { color: var(--leise); font-size: 13px; }
+.vorlage.an { border-color: var(--mint); box-shadow: 2px 2px 0 var(--schatten); }
+
+/* Diktat (VO-03): der Zustand des Mikrofons ist immer zu sehen */
+.knopf.mikro.nimmt { background: var(--rot); border-color: var(--rot); color: var(--auf-neon); animation: mikro 1s steps(2, jump-none) infinite; }
+.knopf.mikro.erkennt { background: var(--gelb); border-color: var(--gelb); color: var(--auf-neon); }
+@keyframes mikro { 50% { box-shadow: 0 0 0 3px var(--rot); } }
+@media (prefers-reduced-motion: reduce) { .knopf.mikro.nimmt { animation: none; } }
+.sprachlage { border: 2px solid var(--kante); padding: 6px 8px; font-size: 13px; }
+.sprachlage.gut { border-color: var(--mint); } .sprachlage.fehlt { border-color: var(--gelb); }
+
+/* Projektleiste: was läuft, steht oben und leuchtet; Favoriten sind ein Filter. */
+.projekt.laeuft { border-left-color: var(--mint); }
+.projekt.laeuft .name { color: var(--text); font-weight: 600; }
+.projekt.aktiv.laeuft { border-left-color: var(--magenta); }
+.projekt .sessions { flex: none; min-width: 18px; padding: 0 4px; border: 2px solid var(--mint); color: var(--mint); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; line-height: 16px; text-align: center; }
+
+/* Projektleiste: zuklappbare Liste aller Projekte, einzelne Projekte ausblendbar. */
+.leiste .abschnitt.klappe { display: flex; align-items: center; gap: 6px; width: 100%; background: none; border: 0; text-align: left; cursor: pointer; }
+.leiste .abschnitt.klappe:hover { color: var(--text); }
+.leiste .abschnitt.klappe .pfeil { font-family: 'Atkinson Next', system-ui, sans-serif; font-size: 14px; width: 12px; }
+.leiste .abschnitt.klappe.leise { padding-left: 18px; }
+.projekt.blass .name { color: var(--leise); }
+.projekt .blende { font-family: 'Atkinson Next', system-ui, sans-serif; color: var(--kante-stark); background: none; border: 0; cursor: pointer; padding: 0 4px; visibility: hidden; }
+.projekt:hover .blende { visibility: visible; }
+.projekt .blende:hover { color: var(--text); }

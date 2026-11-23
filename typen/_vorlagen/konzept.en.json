@@ -1,0 +1,25 @@
+{
+  "name": "Concept",
+  "zweck": "Text, plan or decision: the concept as a document, open questions as a questionnaire.",
+  "git": false,
+  "artefakte": [
+    {
+      "typ": "projektblatt",
+      "titel": "Project sheet"
+    },
+    {
+      "typ": "dokument",
+      "titel": "Concept",
+      "quelle": "Concept.md",
+      "text": "# {{name}}\n\n## What this is about\n\n…\n\n## Proposal\n\n…\n\n## Arguments against\n\n…\n\n## Next step\n\n…\n"
+    },
+    {
+      "typ": "fragebogen",
+      "titel": "Open questions",
+      "daten": {
+        "einleitung": "Only questions whose answer changes the concept.",
+        "fragen": []
+      }
+    }
+  ]
+}

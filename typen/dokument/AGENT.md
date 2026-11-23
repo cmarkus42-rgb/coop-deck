@@ -1,0 +1,1 @@
+Ein Dokument zeigt eine Markdown-Datei des Projekts (`quelle` in `artefakt.json`). Du bearbeitest die Datei; die Ansicht lädt von selbst nach. Die Marken von {{name}} nennen Datei und Zeile. Bezug für `--ref`: `datei:<pfad>:<zeile>` (die Zeile, in der der Absatz, Listenpunkt oder die Tabellenzeile beginnt).

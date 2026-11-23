@@ -1,0 +1,24 @@
+node_modules/
+dist/
+release/
+*.log
+.DS_Store
+
+# Eigener Arbeitsstand im Deck: abgelegte Bilder und gerenderte Ansichten gehören nicht ins Repository
+.coop/ablage/
+.coop/ansichten/
+
+# Hinweise der Sessions an das Deck sind Laufzeitstand
+.coop/hinweise/
+
+# Fragen der Sessions an den Menschen sind Laufzeitstand
+.coop/fragen/
+
+# Anfragen der Sessions ans Handy sind Laufzeitstand
+.coop/anfragen/
+
+# Wendungen, die im Export nicht vorkommen dürfen: liegt nur lokal
+.export-sperrliste
+
+# Übernommenes aus claude.ai: persönliche Inhalte, liegen nur lokal bereit
+.coop/import/

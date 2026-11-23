@@ -1,0 +1,35 @@
+{
+  "name": "Software",
+  "zweck": "Program, service or tool: requirements, roadmap in stages, project sheet.",
+  "git": true,
+  "artefakte": [
+    {
+      "typ": "projektblatt",
+      "titel": "Project sheet"
+    },
+    {
+      "typ": "roadmap",
+      "titel": "Roadmap",
+      "daten": {
+        "meilensteine": [
+          {
+            "id": "M1",
+            "titel": "Stage 1",
+            "ziel": "First working version, used on a real case"
+          },
+          {
+            "id": "M2",
+            "titel": "Stage 2",
+            "ziel": "Extension after the first everyday use"
+          }
+        ]
+      }
+    },
+    {
+      "typ": "dokument",
+      "titel": "Requirements",
+      "quelle": "Requirements.md",
+      "text": "# Requirements: {{name}}\n\nStage 1 = first usable version, stage 2 = extension.\n\n| ID | Requirement | Stage |\n|---|---|---|\n| A-01 | … | 1 |\n\n## Out of scope\n\n- …\n"
+    }
+  ]
+}
