@@ -20,7 +20,7 @@ The deck keeps these things as **artifacts**: readable files in the project unde
 
 | Inbox across projects | Page for the phone |
 |---|---|
-| ![Inbox with requests, questions and a note](docs/screenshot-inbox.png) | ![Requests for photos and audio on the phone](docs/screenshot-phone.png) |
+| ![Inbox with questions, a request to the phone and a note](docs/screenshot-inbox.png) | ![The inbox on the phone: questions with options, a note, a request for a photo](docs/screenshot-phone.png) |
 
 The screenshots show a demo project, with a plain terminal standing in for a CLI session.
 
