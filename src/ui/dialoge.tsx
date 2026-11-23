@@ -257,6 +257,7 @@ function Einstellungen(p: Props) {
   const [ausgabe, setAusgabe] = useState(!!s0.ausgabe)
   const [stimme, setStimme] = useState(s0.stimme ?? '')
   const [piper, setPiper] = useState(s0.piper ?? '')
+  const [laut, setLaut] = useState(s0.lautstaerke ?? 100)
   const [bruecke, setBruecke] = useState(s0.bruecke ?? '')
   const [tasten, setTasten] = useState(Object.entries(s0.tasten ?? {}).map(([k, v]) => `${k}=${v}`).join('\n'))
   const [lage, setLage] = useState<SprachLage | null>(null)
@@ -285,7 +286,7 @@ function Einstellungen(p: Props) {
   }
   const spracheSpeichern = async () => {
     const paare = Object.fromEntries(tasten.split('\n').map((z) => z.split('=').map((x) => x.trim())).filter((x) => x.length === 2 && x[0] && x[1]))
-    p.setZ({ ...p.z, kern: await ruf<Zustand['kern']>('spracheEinstellen', { modell, ausgabe, stimme, piper, bruecke, tasten: paare }) })
+    p.setZ({ ...p.z, kern: await ruf<Zustand['kern']>('spracheEinstellen', { modell, ausgabe, stimme, piper, lautstaerke: laut, bruecke, tasten: paare }) })
     setLage(await ruf<SprachLage>('spracheLage'))
   }
   return (
@@ -347,6 +348,9 @@ function Einstellungen(p: Props) {
         )}
         <label>{t('ui.einst.piper')}
           <input class="feld mono" value={piper} spellcheck={false} placeholder="~/…/bin/piper" onInput={(e) => setPiper((e.target as HTMLInputElement).value)} />
+        </label>
+        <label>{t('ui.einst.lautstaerke', { n: laut })}
+          <input type="range" min={5} max={150} step={5} value={laut} onInput={(e) => setLaut(Number((e.target as HTMLInputElement).value))} />
         </label>
         {lage && <div class={`sprachlage ${lage.vorleser ? 'gut' : 'fehlt'}`}>{lage.vorleserFehlt ?? t(`ui.einst.vorleser.${lage.vorleser ?? 'keiner'}`)}</div>}
         <div class="zeile" style={{ justifyContent: 'flex-end' }}><button class="knopf flach" style={{ flex: 'none' }} onClick={async () => { await spracheSpeichern(); void ruf('sprechProbe') }}>{t('ui.einst.sprechProbe')}</button></div>

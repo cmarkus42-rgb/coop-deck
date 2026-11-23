@@ -23,6 +23,8 @@ export interface SprachEinstellung {
   stimme?: string
   /** Programm `piper` für Piper-Stimmen. Leer: das erste im Suchpfad. */
   piper?: string
+  /** Lautstärke des Vorlesens in Prozent, 5 bis 150. Leer: 100. */
+  lautstaerke?: number
   /** Programm, das Tasten einer BT-Fernbedienung als JSON-Zeilen meldet (VO-02). */
   bruecke?: string
   /** Taste der Fernbedienung → Aktion des Decks. */
@@ -161,13 +163,23 @@ export function sprechen(text: string, e: SprachEinstellung): boolean {
   const sauber = text.replace(/[`*_#>\[\]]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 600)
   if (!sauber) return false
   const p = piperLage(e)
-  if (p.gewollt) return p.fehlt ? false : sprechenMitPiper(sauber, p.programm!, p.stimme!)
+  const laut = lautstaerke(e)
+  if (p.gewollt) return p.fehlt ? false : sprechenMitPiper(sauber, p.programm!, p.stimme!, laut)
   const programm = findeVorleser(e)
   if (!programm) return false
-  spricht = spawn(programm.datei, [...programm.argumente, '--', sauber], { stdio: 'ignore' })
+  // `say` kennt keinen Schalter für die Lautstärke, aber eine Anweisung im Text; espeak nimmt sie als Amplitude.
+  const istSay = path.basename(programm.datei) === 'say'
+  const argumente = istSay || laut === 1 ? programm.argumente : [...programm.argumente, '-a', String(Math.round(laut * 100))]
+  spricht = spawn(programm.datei, [...argumente, '--', istSay && laut !== 1 ? `[[volm ${laut.toFixed(2)}]] ${sauber}` : sauber], { stdio: 'ignore' })
   spricht.on('exit', () => { spricht = null })
   spricht.on('error', () => { spricht = null })
   return true
+}
+
+/** Lautstärke als Faktor: 1 ist, wie die Stimme von sich aus klingt. */
+export function lautstaerke(e: SprachEinstellung): number {
+  const n = Number(e.lautstaerke)
+  return Number.isFinite(n) && n > 0 ? Math.min(150, Math.max(5, Math.round(n))) / 100 : 1
 }
 
 const heim = (p: string) => p.trim().replace(/^~(?=\/|$)/, os.homedir())
@@ -225,14 +237,14 @@ export function aussprache(stimme: string): (text: string) => string {
   return ersetze
 }
 
-function sprechenMitPiper(text: string, programm: string, stimme: string): boolean {
+function sprechenMitPiper(text: string, programm: string, stimme: string, laut = 1): boolean {
   const abspiel = abspieler()
   if (!abspiel) return false
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'coopdeck-stimme-'))
   const wav = path.join(dir, 'satz.wav')
   const weg = () => fs.rmSync(dir, { recursive: true, force: true })
   // Der Text geht über die Eingabe an Piper, nie als Argument und nie durch eine Shell.
-  const piper = spawn(programm, ['-m', stimme, '-f', wav], { cwd: dir, stdio: ['pipe', 'ignore', 'ignore'], env: { ...process.env, PATH: enhancedPath() } })
+  const piper = spawn(programm, ['-m', stimme, '-f', wav, ...(laut === 1 ? [] : ['--volume', laut.toFixed(2)])], { cwd: dir, stdio: ['pipe', 'ignore', 'ignore'], env: { ...process.env, PATH: enhancedPath() } })
   spricht = piper
   piper.stdin?.on('error', () => undefined)
   piper.stdin?.end(aussprache(stimme)(text) + '\n')

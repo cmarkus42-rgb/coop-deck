@@ -8,7 +8,7 @@ export interface Bezug { ref?: string; label?: string; selektor?: string; inhalt
 export interface Marke { nr: number; art: string; text: string; bezug: Bezug; rect?: { x: number; y: number; w: number; h: number } }
 export interface Hinweis { id: string; von: string; artefakt?: string; ref?: string; text: string }
 export interface Frage { id: string; titel: string; text?: string; optionen: { id: string; titel: string; beschreibung?: string }[] }
-export interface Sprache { modell?: string; sprache?: string; ausgabe?: boolean; stimme?: string; piper?: string; bruecke?: string; tasten?: Record<string, string> }
+export interface Sprache { modell?: string; sprache?: string; ausgabe?: boolean; stimme?: string; piper?: string; lautstaerke?: number; bruecke?: string; tasten?: Record<string, string> }
 export interface SprachLage { erkennung: boolean; ausgabe: boolean; vorleser: 'piper' | 'system' | null; vorleserFehlt: string | null; stimmen: string[]; fehlt: string[]; modell: string | null; fernbedienung: boolean; aktionen: Record<string, string>; tastenVorgabe: Record<string, string>; fernFehler: string | null }
 export interface Treffer { art: 'projekt' | 'sitzung' | 'artefakt' | 'punkt' | 'rueckmeldung'; projektId: string; projekt: string; kennung: string; titel: string; text?: string; artefakt?: string; ref?: string }
 export interface Posten { art: 'frage' | 'sitzung' | 'hinweis' | 'schlange' | 'anfrage' | 'lieferung' | 'dienst'; projektId: string; projekt: string; kennung: string; titel: string; text?: string; zeit: string; frage?: Frage; sitzung?: string; artefakt?: string; ref?: string }

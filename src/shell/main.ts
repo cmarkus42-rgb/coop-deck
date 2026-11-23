@@ -126,7 +126,7 @@ const methoden: Methoden = {
     const text = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : undefined)
     const tasten: Record<string, string> = {}
     for (const [k, v] of Object.entries(patch.tasten ?? {})) if (/^[a-z0-9_-]{1,24}$/i.test(k) && v in sp.AKTIONEN) tasten[k.toLowerCase()] = v
-    deck.einstellungen.get().sprache = { modell: text(patch.modell), sprache: text(patch.sprache), ausgabe: !!patch.ausgabe, stimme: text(patch.stimme), piper: text(patch.piper), bruecke: text(patch.bruecke), tasten: Object.keys(tasten).length ? tasten : undefined }
+    deck.einstellungen.get().sprache = { modell: text(patch.modell), sprache: text(patch.sprache), ausgabe: !!patch.ausgabe, stimme: text(patch.stimme), piper: text(patch.piper), lautstaerke: Number(patch.lautstaerke) > 0 && Number(patch.lautstaerke) !== 100 ? Math.min(150, Math.max(5, Math.round(Number(patch.lautstaerke)))) : undefined, bruecke: text(patch.bruecke), tasten: Object.keys(tasten).length ? tasten : undefined }
     deck.einstellungen.save()
     fern.start(sprache().bruecke)
     return kern()

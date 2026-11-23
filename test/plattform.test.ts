@@ -128,6 +128,12 @@ test('Vorlesen mit Piper: Aussprachetabelle ersetzt ganze Wörter und Wendungen,
     assert.deepEqual(ohneProgramm.stimmen.map((x) => path.basename(x)), ['de_DE-probe-medium-ruhig.onnx', 'de_DE-probe-medium.onnx'])
     assert.equal(sp.lage({ stimme: 'Anna' }).vorleserFehlt, null, 'ein Name ist eine Stimme des Systems, kein Piper')
     assert.equal(sp.sprechen('Text', { stimme: path.join(dir, 'gibt-es-nicht.onnx') }), false, 'fehlt die gewählte Stimme, bleibt es still')
+    // Lautstärke: Prozent in der Einstellung, als Faktor an das Vorleseprogramm; ohne Angabe unverändert.
+    assert.equal(sp.lautstaerke({}), 1)
+    assert.equal(sp.lautstaerke({ lautstaerke: 50 }), 0.5)
+    assert.equal(sp.lautstaerke({ lautstaerke: 1 }), 0.05)
+    assert.equal(sp.lautstaerke({ lautstaerke: 900 }), 1.5)
+    assert.equal(sp.lautstaerke({ lautstaerke: -3 }), 1)
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }
