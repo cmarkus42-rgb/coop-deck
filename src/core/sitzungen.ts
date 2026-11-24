@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
 import { EventEmitter } from 'events'
-import { Ablage, HOME, RUNS, BIN, ensureDir, writeJson, writeFileAtomic, enhancedPath, id } from './basis'
+import { kurz, Ablage, HOME, RUNS, BIN, ensureDir, writeJson, writeFileAtomic, enhancedPath, id } from './basis'
 import { TmuxClient, createSession, killSession, listSessions, restoreSequence } from './tmux/manager'
 import type { CliId, Projekt } from './projekte'
 import { claudeSettings, codexHookArgs, codexVertrauen, opencodePlugin, piErweiterung } from './melder'
@@ -18,6 +18,8 @@ export interface Sitzung {
   art: 'cli' | 'terminal'
   cli: CliId | null
   titel: string
+  /** Von Hand benannt: die Session ändert den Namen des Reiters dann nicht mehr. */
+  titelFest?: boolean
   zweck?: string
   /** Verknüpfter Roadmap-Punkt (SE-06, RM-04). */
   roadmap?: { artefakt: string; punkt: string }
@@ -251,7 +253,7 @@ export class Sitzungen extends EventEmitter {
     const nummer = this.liste(o.projekt.id).length + 1
     const s: Sitzung = {
       id: sid, projektId: o.projekt.id, art, cli,
-      titel: o.titel?.trim() || (art === 'terminal' ? t('sitzung.terminal', { n: nummer }) : `${ADAPTER[cli!].name} ${nummer}`),
+      titel: o.titel?.trim() || (o.zweck?.trim() ? kurz(o.zweck, 40) : '') || (art === 'terminal' ? t('sitzung.terminal', { n: nummer }) : `${ADAPTER[cli!].name} ${nummer}`),
       zweck: o.zweck, roadmap: o.roadmap, tmux: `cd-${sid}`,
       cliSessionId: crypto.randomUUID(), erstellt: Date.now(), aktiv: Date.now(), zustand: 'arbeitet',
       frei: art === 'cli' ? !!o.ohneRueckfragen : undefined,
@@ -355,7 +357,7 @@ export class Sitzungen extends EventEmitter {
     try { fs.rmSync(this.laufOrdner(sid), { recursive: true, force: true }) } catch { /* egal */ }
   }
 
-  aendern(sid: string, patch: Partial<Pick<Sitzung, 'titel' | 'zweck' | 'ergebnis' | 'achtung' | 'punkte'>>): void {
+  aendern(sid: string, patch: Partial<Pick<Sitzung, 'titel' | 'titelFest' | 'zweck' | 'ergebnis' | 'achtung' | 'punkte'>>): void {
     const s = this.get(sid)
     if (!s) return
     Object.assign(s, patch)

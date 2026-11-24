@@ -6,6 +6,7 @@ import http from 'http'
 import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
+import * as anleitung from './anleitung'
 import { APP_ROOT, BIN, TYPEN, VERBINDUNG, ensureDir, innerhalb, writeFileAtomic } from './basis'
 import type { Deck } from './deck'
 import * as rm from './roadmap'
@@ -172,6 +173,14 @@ async function handle(deck: Deck, sse: Map<string, Set<http.ServerResponse>>, re
   if (methode !== 'GET' && origin && origin !== deck.basis()) return senden(res, 403, t('server.fremdeHerkunft'))
 
   if (teile[0] === 'typ' && methode === 'GET') return datei(res, innerhalb(TYPEN, teile.slice(1).join('/')), cspDeck(deck))
+
+  // Die Anleitung des Decks (UI-11): eigene Seite, Kapitel in der gewählten Sprache.
+  if (teile[0] === 'hilfe' && methode === 'GET') return datei(res, path.join(TYPEN, 'anleitung', 'index.html'), cspDeck(deck))
+  if (teile[0] === 'api' && teile[1] === 'hilfe' && methode === 'GET') {
+    if (!teile[2]) return json(res, 200, { sprache: sprache(), kapitel: anleitung.kapitel(sprache()) })
+    const text = anleitung.lesen(sprache(), teile[2])
+    return text === null ? json(res, 404, { fehler: [t('server.nichtGefunden')] }) : json(res, 200, { text })
+  }
 
   if (teile[0] === 'api' && teile[1] === 'cli' && methode === 'POST') {
     // Nur mit dem Token im Kopf: das kann die Kommandozeile, eine Seite im Browser nicht.

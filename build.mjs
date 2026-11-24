@@ -3,13 +3,16 @@ import { build } from 'esbuild'
 import fs from 'fs'
 import path from 'path'
 
-const node = { bundle: true, platform: 'node', format: 'cjs', target: 'node20', external: ['electron'], sourcemap: true, logLevel: 'warning' }
+// Lokale Erweiterung, wenn es eine gibt (siehe src/shell/lokal-leer.ts); sonst die leere Fassung.
+const lokal = (name, leer) => path.resolve(fs.existsSync(`src/lokal/${name}`) ? `src/lokal/${name}` : leer)
+const alias = { '@lokal/shell': lokal('shell.ts', 'src/shell/lokal-leer.ts'), '@lokal/ui': lokal('ui.tsx', 'src/ui/lokal-leer.tsx') }
+const node = { alias,  bundle: true, platform: 'node', format: 'cjs', target: 'node20', external: ['electron'], sourcemap: true, logLevel: 'warning' }
 await build({ ...node, entryPoints: ['src/shell/main.ts'], outfile: 'dist/shell/main.js' })
 await build({ ...node, entryPoints: ['src/shell/preload.ts'], outfile: 'dist/shell/preload.js' })
 await build({ ...node, entryPoints: ['src/shell/ansicht-preload.ts'], outfile: 'dist/shell/ansicht-preload.js' })
 await build({ ...node, entryPoints: ['src/cli/coop.ts'], outfile: 'dist/cli/coop.js' })
 await build({
-  bundle: true, platform: 'browser', format: 'iife', target: 'chrome130', sourcemap: true, logLevel: 'warning',
+  alias, bundle: true, platform: 'browser', format: 'iife', target: 'chrome130', sourcemap: true, logLevel: 'warning',
   entryPoints: ['src/ui/app.tsx'], outfile: 'dist/ui/app.js', jsx: 'automatic', jsxImportSource: 'preact',
   loader: { '.css': 'css', '.woff2': 'file' }, assetNames: 'fonts/[name]',
 })

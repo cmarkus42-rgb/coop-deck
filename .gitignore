@@ -22,3 +22,10 @@ release/
 
 # Übernommenes aus claude.ai: persönliche Inhalte, liegen nur lokal bereit
 .coop/import/
+
+# Fehlerberichte aus dem laufenden Deck: Bilder des Fensters, bleiben lokal
+.coop/fehlerberichte/
+
+# Abgelegtes Material (Designsysteme als Archiv): bleibt lokal, bis es gelesen und eingeordnet ist
+/assets/
+/Assets/

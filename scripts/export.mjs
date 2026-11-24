@@ -22,7 +22,9 @@ if (!ziel) { console.error('Wohin? node scripts/export.mjs <zielordner>'); proce
 if (fs.existsSync(ziel) && fs.readdirSync(ziel).length) { console.error(`${ziel} ist nicht leer. Der Export schreibt nur in einen neuen oder leeren Ordner.`); process.exit(2) }
 
 /** Arbeitsunterlagen bleiben im lokalen Repository. */
-const INTERN = [/^\.coop\//, /^Anforderungskatalog\.md$/, /^PROJEKT\.md$/, /^\.export-sperrliste$/]
+const INTERN = [/^\.coop\//, /^Anforderungskatalog\.md$/, /^PROJEKT\.md$/, /^\.export-sperrliste$/,
+  // Lokale Erweiterung (siehe src/shell/lokal-leer.ts): ausprobiert, aber noch nicht veröffentlicht.
+  /^src\/lokal\//, /^test\/lokal/]
 
 const dateien = execFileSync('git', ['ls-files', '-z'], { cwd: wurzel, encoding: 'utf-8' }).split('\0').filter(Boolean)
   .filter((f) => !INTERN.some((r) => r.test(f)))

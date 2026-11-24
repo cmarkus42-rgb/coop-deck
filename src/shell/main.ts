@@ -1,4 +1,5 @@
 /** Electron-Hülle: ein Fenster, die Brücke zur Oberfläche, Bildausgabe. Der Kern liegt in src/core. */
+import { lokaleMethoden } from '@lokal/shell'
 import { app, BrowserWindow, ipcMain, dialog, clipboard, webContents, shell, nativeTheme, session, Notification, systemPreferences } from 'electron'
 import { execFile } from 'child_process'
 import fs from 'fs'
@@ -164,7 +165,7 @@ const methoden: Methoden = {
   },
   projektAendern: (pid: string, patch: object) => deck.projekte.aendern(pid, patch),
   projektHinzufuegen: async () => {
-    const r = await dialog.showOpenDialog(fenster!, { properties: ['openDirectory'], title: t('dialog.projektWaehlen') })
+    const r = await dialog.showOpenDialog(fenster!, { properties: ['openDirectory', 'showHiddenFiles'], title: t('dialog.projektWaehlen') })
     if (r.canceled || !r.filePaths[0]) return null
     return deck.projekte.hinzufuegen(r.filePaths[0])
   },
@@ -180,6 +181,14 @@ const methoden: Methoden = {
   sitzungFortsetzen: (sid: string) => deck.sitzungFortsetzen(sid),
   sitzungBeenden: (sid: string) => deck.sitzungen.beenden(sid),
   sitzungEntfernen: (sid: string) => deck.sitzungen.entfernen(sid),
+  hilfeFenster: () => {
+    const w = new BrowserWindow({ width: 1100, height: 860, title: t('ui.hilfe'), backgroundColor: '#2a4852', autoHideMenuBar: true, webPreferences: { partition: 'persist:coop', contextIsolation: true, nodeIntegration: false } })
+    // Verweise nach außen gehören in den Browser des Systems, nicht in dieses Fenster.
+    w.webContents.setWindowOpenHandler(({ url }) => { if (/^https?:/i.test(url)) void shell.openExternal(url); return { action: 'deny' } })
+    w.webContents.on('will-navigate', (e, url) => { if (!url.startsWith(deck.basis())) { e.preventDefault(); if (/^https?:/i.test(url)) void shell.openExternal(url) } })
+    void w.loadURL(deck.mitToken(`${deck.basis()}/hilfe/`))
+  },
+  sitzungBenennen: (sid: string, name: string) => deck.sitzungBenennen(sid, String(name ?? '')),
   sitzungAendern: (sid: string, patch: object) => deck.sitzungen.aendern(sid, patch),
   verbinden: (sid: string, cols: number, rows: number) => deck.sitzungen.verbinden(sid, cols, rows),
   jetztZustellen: (sid: string) => deck.sitzungen.jetztZustellen(sid),
@@ -328,8 +337,9 @@ if (!app.requestSingleInstanceLock()) {
       cb({ cancel: !lokal })
     })
 
+    const eigene = lokaleMethoden({ fenster: () => fenster, deck }) as Record<string, (...args: unknown[]) => unknown>
     ipcMain.handle('deck', async (_e, name: string, ...args: unknown[]) => {
-      const m = methoden[name]
+      const m = methoden[name] ?? eigene[name]
       if (!m) throw new Error(t('fehler.methodeUnbekannt', { name }))
       return m(...args)
     })

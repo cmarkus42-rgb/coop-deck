@@ -13,7 +13,8 @@
     "app": "node build.mjs && electron-builder --mac dir --arm64",
     "dmg": "node build.mjs && electron-builder --mac dmg --arm64",
     "app:linux": "node build.mjs && electron-builder --linux AppImage",
-    "export": "node scripts/export.mjs"
+    "export": "node scripts/export.mjs",
+    "anleitung": "node --import tsx scripts/anleitung.ts"
   },
   "license": "MIT",
   "repository": {
@@ -64,6 +65,7 @@
       "dist/**",
       "typen/**",
       "mobil/**",
+      "anleitung/**",
       "package.json",
       "build/icon.png",
       "LICENSE",

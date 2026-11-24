@@ -1,4 +1,5 @@
 import { render } from 'preact'
+import { Lokal } from '@lokal/ui'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import '@xterm/xterm/css/xterm.css'
 import './stil.css'
@@ -193,6 +194,15 @@ function App() {
   const stand = useRef({ raum, aktivS, reiter, aktivR, z, werkzeug })
   stand.current = { raum, aktivS, reiter, aktivR, z, werkzeug }
   const zaehler = useRef(0)
+  const [benenne, setBenenne] = useState<string | null>(null)
+  const offenesFeld = useRef<string | null>(null)
+  // Enter, Escape und Verlassen des Feldes enden hier; nur das erste zählt.
+  const benannt = (s: Sitzung, name: string | null) => {
+    if (offenesFeld.current !== s.id) return
+    offenesFeld.current = null
+    setBenenne(null)
+    if (name !== null && name.trim() !== s.titel) void ruf('sitzungBenennen', s.id, name.trim())
+  }
 
   const melde = (text: string) => { setMeldung(text); setTimeout(() => setMeldung((m) => (m === text ? null : m)), 6000) }
   const versuche = async <R,>(fn: () => Promise<R>): Promise<R | undefined> => {
@@ -221,6 +231,16 @@ function App() {
     setReiter((rs) => [...rs, { key, art: eigen ? 'datei' : 'web', titel: titel ?? (adr === 'about:blank' ? t('ui.reiter.neu') : adr.replace(/^https?:\/\//, '').slice(0, 28)), adresse: mitToken(adr), partition: lokal(adr) ? 'persist:coop' : 'persist:web' }])
     setAktivR(key)
     setSicht((s) => (s === 'links' ? 'beide' : s))
+  }
+  /** Die Anleitung: als Reiter neben der Session; ohne offenes Projekt in einem eigenen Fenster. */
+  const oeffneHilfe = () => {
+    const { z: zz, raum: r, reiter: rs } = stand.current
+    if (!zz) return
+    if (!r) return void ruf('hilfeFenster')
+    const da = rs.find((x) => x.adresse.startsWith(`${zz.basis}/hilfe`))
+    if (!da) return oeffneAdresse(`${zz.basis}/hilfe/`, t('ui.hilfe'))
+    setAktivR(da.key)
+    setSicht((x) => (x === 'links' ? 'beide' : x))
   }
   /** Ziel aus Terminal oder Adresszeile: Adresse, Artefakt oder Datei im Projekt. */
   const oeffneZiel = async (text: string) => {
@@ -619,6 +639,7 @@ function App() {
     e.push({ titel: t('ui.projektAusVorlage'), neben: t('ui.palette.befehl'), aktion: () => setDialog({ art: 'projekt-neu' }) })
     e.push({ titel: t('ui.palette.diktat'), neben: t('ui.palette.befehlDiktat'), aktion: () => aktion.current('diktat') })
     e.push({ titel: t('ui.palette.eingang'), neben: t('ui.palette.befehl'), aktion: () => setEingangOffen(true) })
+    e.push({ titel: t('ui.hilfe'), neben: t('ui.palette.befehl'), aktion: () => oeffneHilfe() })
     e.push({ titel: t('ui.einstellungen'), neben: t('ui.palette.befehl'), aktion: () => setDialog({ art: 'einstellungen' }) })
     return e
   }
@@ -659,6 +680,8 @@ function App() {
           {diktat === 'nimmt' ? t('ui.diktat.aufnahme', { ziel: diktatZiel() }) : diktat === 'erkennt' ? t('ui.diktat.erkennt') : t('ui.diktat')}
         </button>
         <button class="knopf" title={t('ui.suchen.titel')} onClick={() => setPalette(true)}>{t('ui.suchen')}</button>
+        <Lokal lage={() => { const st = stand.current; const s = st.raum?.sitzungen.find((y) => y.id === st.aktivS); const r = st.reiter.find((y) => y.key === st.aktivR); return { projekt: st.raum?.projekt.name, pfad: st.raum?.projekt.pfad, sitzung: s ? `${s.titel} (${s.cli ?? s.art}, ${s.zustand})` : undefined, reiter: r ? `${r.titel} (${r.art})` : undefined, sicht } }} diktat={() => aktion.current('diktat')} diktatLaeuft={diktat !== 'aus'} melde={setMeldung} />
+        <button class="knopf" title={t('ui.hilfe.titel')} onClick={() => oeffneHilfe()}>{t('ui.hilfe')}</button>
         <button class="knopf" onClick={() => setDialog({ art: 'einstellungen' })}>{t('ui.einstellungen')}</button>
       </div>
 
@@ -715,9 +738,15 @@ function App() {
             <section class="bereich" style={{ width: linksBreite, flex: sicht === 'links' ? 1 : 'none', display: sicht === 'rechts' ? 'none' : 'flex' }}>
               <div class="reiterleiste">
                 {reiterS.map((s) => (
-                  <div class={`reiter${s.id === aktivS ? ' aktiv' : ''}`} role="tab" tabIndex={0} title={`${s.titel}${s.zweck ? ` — ${s.zweck}` : ''}`} onClick={() => waehleSitzung(s.id)}>
+                  <div class={`reiter${s.id === aktivS ? ' aktiv' : ''}`} role="tab" tabIndex={0} title={`${s.titel}${s.zweck ? ` — ${s.zweck}` : ''} · ${t('ui.sitzung.benennen')}`} onClick={() => waehleSitzung(s.id)} onDblClick={() => { offenesFeld.current = s.id; setBenenne(s.id) }}>
                     <span class={`led ${led(s)}`} />
-                    <span class="titel">{s.titel}</span>
+                    {benenne === s.id
+                      ? <input class="feld name" size={Math.max(8, s.titel.length)} maxLength={60} value={s.titel} title={t('ui.sitzung.benennenFeld')} ref={(el) => { if (el && document.activeElement !== el) { el.focus(); el.select() } }}
+                          onClick={(e) => e.stopPropagation()} onDblClick={(e) => e.stopPropagation()}
+                          onKeyDown={(e) => { e.stopPropagation(); if (e.key === 'Enter') benannt(s, (e.target as HTMLInputElement).value); if (e.key === 'Escape') benannt(s, null) }}
+                          onBlur={(e) => benannt(s, (e.target as HTMLInputElement).value)} />
+                      : <span class="titel">{s.titel}</span>}
+                    {s.cli && !s.titel.toLowerCase().includes(s.cli) ? <span class="art">{s.cli}</span> : null}
                     {s.frei ? <span class="art" title={t('ui.sitzung.freiTitel')}>{t('ui.sitzung.frei')}</span> : null}
                     {s.schlange ? <span class="zaehler" title={t('ui.sitzung.schlangeTitel')}>{s.schlange}</span> : null}
                     <button class="zu" title={s.zustand === 'beendet' ? t('ui.sitzung.ausLeiste') : t('ui.sitzung.beenden')} onClick={(e) => {

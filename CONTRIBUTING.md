@@ -21,6 +21,7 @@ npm start
 - Artifacts and views load nothing from the network. Fonts and libraries are bundled.
 - Content from a project is foreign: it is served sandboxed and never typed verbatim into a session. See `SECURITY.md` before touching the server, the actions of pages or anything that delivers text to a session.
 - Nothing personal and nothing machine-specific in the source: no names, no absolute paths, no host names. Where a program lives is a setting.
+- The guide (`anleitung/de/`, `anleitung/en/`) changes with the behaviour, in the same pull request. Write the names of buttons as placeholders (`{{ui.eingang}}`) so they cannot drift, then run `npm run anleitung` to refresh `docs/anleitung/`. A test checks both.
 - A comment says what the code cannot say: why, or what it guards against.
 
 ## A new artifact type

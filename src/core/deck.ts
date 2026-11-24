@@ -433,7 +433,7 @@ export class Deck extends EventEmitter {
     if (s.zweck) z.push('', t('briefing.zweck', { zweck: s.zweck }))
     z.push('', t('briefing.zusammenarbeit'), '')
     z.push(t('briefing.coop'), '')
-    for (const k of ['zeigen', 'hinweis', 'frage', 'bild', 'roadmap', 'artefakt', 'ergebnis', 'uebergabe'] as const) z.push(t(`briefing.${k}`))
+    for (const k of ['zeigen', 'hinweis', 'frage', 'bild', 'roadmap', 'artefakt', 'thema', 'ergebnis', 'uebergabe'] as const) z.push(t(`briefing.${k}`))
     // Nur nennen, was geht: ohne eingeschalteten Zugang gibt es niemanden, der liefert.
     if (this.mobilEinstellung().an) z.push(t('briefing.anfordern', { name: nutzer() }))
     z.push(t(tg.eingerichtet(this.einstellungen.get().telegram) ? 'briefing.meldenTelegram' : 'briefing.melden', { name: nutzer() }))
@@ -1137,6 +1137,14 @@ export class Deck extends EventEmitter {
           this.sitzungen.aendern(s.id, { ergebnis: rest[1] })
           return ok(t('befehl.ergebnisFest'))
         }
+        // Der Reiter trägt, worum es gerade geht. Ein Name von Hand geht vor.
+        if (rest[0] === 'thema' && s) {
+          const thema = kurz((rest[1] ?? '').replace(/[\u0000-\u001f\u007f`]+/g, ' '), 40)
+          if (!thema) throw new Error(t('befehl.themaAufruf'))
+          if (s.titelFest) return ok(t('befehl.themaVonHand', { titel: s.titel }))
+          this.sitzungen.aendern(s.id, { titel: thema })
+          return ok(t('befehl.themaFest', { titel: thema }))
+        }
         throw new Error(t('befehl.ergebnisAufruf'))
       }
       default:
@@ -1151,6 +1159,12 @@ export class Deck extends EventEmitter {
     const abs = innerhalb(p.pfad, path.isAbsolute(ziel) ? path.relative(p.pfad, ziel) : ziel)
     if (abs && fs.existsSync(abs)) return { projektId: p.id, datei: path.relative(p.pfad, abs) }
     throw new Error(t('befehl.zielUnbekannt', { ziel }))
+  }
+
+  /** Reiter von Hand benennen. Ein leerer Name gibt ihn der Session zurück. */
+  sitzungBenennen(sid: string, name: string): void {
+    const titel = kurz(name.replace(/[\u0000-\u001f\u007f]+/g, ' '), 60)
+    this.sitzungen.aendern(sid, titel ? { titel, titelFest: true } : { titelFest: false })
   }
 
   /** Eigene Seiten brauchen das Token; fremde Adressen bekommen es nie. */

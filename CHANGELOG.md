@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Built-in guide: button “Guide” opens eleven how-to chapters as a tab, in German or English. The same chapters are generated to `docs/anleitung/` for GitHub. Names of buttons come from the texts of the interface; a test fails when the guide falls behind.
+- Session tabs carry the topic instead of the CLI name: the session sets it with `coop sitzung thema`, a double-click renames a tab by hand, and a name given by hand stays.
+- The project chooser shows hidden directories.
 - Volume for reading aloud.
 - Questions leave the inbox when they are settled in the conversation, withdrawn by the session or cleared by hand.
 - Shared services: a project offers a local service to all projects; after confirmation every briefing names it. `coop dienst liste | starte`.

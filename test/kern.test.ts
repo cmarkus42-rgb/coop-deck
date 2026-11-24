@@ -803,3 +803,65 @@ test('Sprache der Oberfläche: Englisch gilt für Briefing, Befehl, Rückmeldung
     deck.stop()
   }
 })
+
+test('Reiter: die Session nennt ihr Thema, ein Name von Hand geht vor', async () => {
+  const deck = new deckMod.Deck()
+  await deck.start()
+  const dir = path.join(tmp, 'thema-projekt')
+  fs.mkdirSync(dir, { recursive: true })
+  const p = deck.projekte.hinzufuegen(dir)!
+  const s = await deck.sitzungen.starten({ projekt: p, art: 'terminal', zweck: 'Reiter benennen und sortieren', briefing: () => '' })
+  const titel = () => deck.sitzungen.get(s.id)!.titel
+  try {
+    // Ohne Titel trägt der Reiter den Zweck, nicht den Namen der CLI.
+    assert.equal(titel(), 'Reiter benennen und sortieren')
+    assert.equal((await deck.befehl(['sitzung', 'thema', 'Lautstärke\n`Vorlesen`'], { sitzung: s.id })).code, 0)
+    assert.equal(titel(), 'Lautstärke Vorlesen')
+    assert.equal((await deck.befehl(['sitzung', 'thema', ' '], { sitzung: s.id })).code, 1)
+    assert.equal((await deck.befehl(['sitzung', 'thema', 'x'.repeat(90)], { sitzung: s.id })).code, 0)
+    assert.equal(titel().length, 40)
+    // Von Hand benannt: die Session ändert nichts mehr, bis der Name geleert wird.
+    deck.sitzungBenennen(s.id, 'Mein Reiter')
+    assert.match((await deck.befehl(['sitzung', 'thema', 'Anderes'], { sitzung: s.id })).aus, /Mein Reiter/)
+    assert.equal(titel(), 'Mein Reiter')
+    deck.sitzungBenennen(s.id, '  ')
+    assert.equal(titel(), 'Mein Reiter')
+    await deck.befehl(['sitzung', 'thema', 'Anderes'], { sitzung: s.id })
+    assert.equal(titel(), 'Anderes')
+    assert.match(deck.briefing(p, deck.sitzungen.get(s.id)!), /coop sitzung thema/)
+  } finally {
+    await deck.sitzungen.beenden(s.id)
+    await deck.stop()
+  }
+})
+
+test('Anleitung: beide Sprachen decken dasselbe ab, nennen Knöpfe beim Namen und sind für GitHub erzeugt', async () => {
+  const an = await import('../src/core/anleitung')
+  const ui = await import('../src/texte/ui')
+  const de = an.dateien('de')
+  assert.ok(de.length >= 10)
+  assert.deepEqual(an.dateien('en'), de)
+  const genannt = new Set<string>()
+  for (const datei of de) {
+    const [a, b] = [an.roh('de', datei)!, an.roh('en', datei)!]
+    // Jeder Platzhalter löst sich auf, und beide Fassungen nennen dieselben Knöpfe, Typen und Befehle.
+    for (const s of ['de', 'en'] as const) assert.deepEqual(an.einsetzen(s === 'de' ? a : b, s).fehlend, [], `${s}/${datei}`)
+    assert.deepEqual([...new Set(an.platzhalter(b))].sort(), [...new Set(an.platzhalter(a))].sort(), datei)
+    for (const k of an.platzhalter(a)) genannt.add(k)
+    // Verweise zwischen Kapiteln zeigen auf Kapitel, die es gibt.
+    for (const m of `${a}\n${b}`.matchAll(/\]\((\d\d-[a-z0-9-]+\.md)\)/g)) assert.ok(de.includes(m[1]), `${datei} → ${m[1]}`)
+  }
+  // Was neu in die Oberfläche kommt, muss in die Anleitung: Werkzeuge, Arten von Posten im Eingang,
+  // Abschnitte der Einstellungen, die Knöpfe der Kopfzeile, jeder Typ und die Befehlsliste.
+  const pflicht = Object.keys(ui.de).filter((k) => /^ui\.(werkzeug\.[a-z]+|eingang\.art\.[a-z]+|sicht\.[a-z]+)$/.test(k))
+  pflicht.push('ui.eingang', 'ui.diktat', 'ui.suchen', 'ui.hilfe', 'ui.einstellungen', 'ui.verlauf', 'ui.einst.voice', 'ui.einst.mobil', 'ui.einst.telegram', 'befehle')
+  const typen = fs.readdirSync(path.join(__dirname, '..', 'typen')).filter((d) => fs.existsSync(path.join(__dirname, '..', 'typen', d, 'typ.json')))
+  for (const k of [...pflicht, ...typen.map((d) => `typ.${d}`)]) assert.ok(genannt.has(k), `Die Anleitung nennt ${k} nicht`)
+  // Die Fassung für GitHub ist aus den Quellen erzeugt und auf dem Stand (`npm run anleitung`).
+  for (const s of ['de', 'en'] as const) {
+    const soll = an.erzeugt(s)
+    const dir = path.join(__dirname, '..', 'docs', 'anleitung', s)
+    assert.deepEqual(fs.readdirSync(dir).sort(), Object.keys(soll).sort())
+    for (const [name, text] of Object.entries(soll)) assert.equal(fs.readFileSync(path.join(dir, name), 'utf-8'), text, `docs/anleitung/${s}/${name} ist veraltet: npm run anleitung`)
+  }
+})

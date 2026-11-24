@@ -112,6 +112,7 @@ export const de = {
   'briefing.bild': '- `coop bild <artefakt|adresse>` — rendert die Ansicht als PNG und nennt den Pfad. Sieh dir dein Ergebnis an, bevor du es zeigst.',
   'briefing.roadmap': '- `coop roadmap liste | zeige <R-n> | status <R-n> <status> --notiz "…" | neu "<titel>"` — Roadmap lesen und fortschreiben.',
   'briefing.artefakt': '- `coop artefakt liste | neu <typ> "<titel>"` — Artefakte des Projekts.',
+  'briefing.thema': '- `coop sitzung thema "<zwei bis vier Wörter>"` — benennt deinen Reiter nach dem, woran ihr gerade arbeitet. Setze es nach dem ersten Auftrag und wenn das Thema wechselt.',
   'briefing.ergebnis': '- `coop sitzung ergebnis "<ein, zwei Sätze>"` — am Ende festhalten, was getan und was offen ist.',
   'briefing.uebergabe': '- `coop uebergabe "<Stand>" --offen "…" --naechster "…"` — Übergabe für die nächste Session: sie steht in deren Briefing.',
   'briefing.anfordern': '- `coop anfordern "<was du brauchst>" [--text "<worauf es ankommt>"] [--art foto|ton|beides] [--warten]` — Fotos oder gesprochene Notizen von {name}s Handy. Mit `--warten` als Hintergrundbefehl starten: er endet mit den Dateipfaden, sobald abgeschickt ist; Ton kommt als Text dazu. Nutze das, wenn du etwas sehen musst, das nicht im Rechner liegt.',
@@ -266,7 +267,10 @@ export const de = {
   'befehl.uebergabeAufruf': 'coop uebergabe "<Stand>" [--offen "…"]… [--naechster "…"]',
   'befehl.uebergabeFest': 'Übergabe {id} festgehalten in {artefakt}.',
   'befehl.ergebnisFest': 'Ergebnis festgehalten.',
-  'befehl.ergebnisAufruf': 'coop sitzung ergebnis "<text>" (nur in einer Deck-Session)',
+  'befehl.ergebnisAufruf': 'coop sitzung ergebnis "<text>" | thema "<worte>" (nur in einer Deck-Session)',
+  'befehl.themaAufruf': 'coop sitzung thema "<zwei bis vier Wörter>"',
+  'befehl.themaFest': 'Reiter heißt jetzt „{titel}“.',
+  'befehl.themaVonHand': 'Der Reiter ist von Hand benannt („{titel}“) und bleibt so.',
   'befehl.unbekannt': 'Unbekannter Befehl „{was}“. coop hilfe zeigt alles.',
   'befehl.zielUnbekannt': '„{ziel}“ ist weder Artefakt noch Datei im Projekt noch Adresse.',
   'befehl.hilfe': `coop — Verbindung einer Session zum Coop Deck
@@ -289,6 +293,7 @@ export const de = {
   coop roadmap notiz <R-n> "<text>"            (alle roadmap-Befehle: [--artefakt <id>])
   coop rueckmeldung liste | erledigt <kennung> [--notiz "…"]
   coop sitzung ergebnis "<text>"
+  coop sitzung thema "<worte>"                 (benennt den Reiter)
   coop uebergabe "<Stand>" [--offen "…"]… [--naechster "…"]
 
 Bezüge (--ref) sind die Kennungen, die ein Artefakt vergibt, z. B. roadmap:R-3 oder datei:PROJEKT.md:14.
@@ -513,6 +518,7 @@ export const en: Record<keyof typeof de, string> = {
   'briefing.bild': '- `coop bild <artifact|url>` — renders the view as a PNG and prints the path. Look at your result before you show it.',
   'briefing.roadmap': '- `coop roadmap liste | zeige <R-n> | status <R-n> <status> --notiz "…" | neu "<title>"` — read the roadmap and keep it up to date.',
   'briefing.artefakt': '- `coop artefakt liste | neu <type> "<title>"` — artifacts of the project.',
+  'briefing.thema': '- `coop sitzung thema "<two to four words>"` — names your tab after what you are working on right now. Set it after the first task and whenever the topic changes.',
   'briefing.ergebnis': '- `coop sitzung ergebnis "<one or two sentences>"` — at the end, record what was done and what is open.',
   'briefing.uebergabe': '- `coop uebergabe "<state>" --offen "…" --naechster "…"` — handover for the next session: it appears in that session’s briefing.',
   'briefing.anfordern': '- `coop anfordern "<what you need>" [--text "<what matters>"] [--art foto|ton|beides] [--warten]` — photos or spoken notes from {name}’s phone. With `--warten`, start it as a background command: it ends with the file paths once the delivery is sent; audio also arrives as text. Use it when you need to see something that is not on the computer.',
@@ -667,7 +673,10 @@ export const en: Record<keyof typeof de, string> = {
   'befehl.uebergabeAufruf': 'coop uebergabe "<state>" [--offen "…"]… [--naechster "…"]',
   'befehl.uebergabeFest': 'Handover {id} recorded in {artefakt}.',
   'befehl.ergebnisFest': 'Result recorded.',
-  'befehl.ergebnisAufruf': 'coop sitzung ergebnis "<text>" (only in a deck session)',
+  'befehl.ergebnisAufruf': 'coop sitzung ergebnis "<text>" | thema "<words>" (only in a deck session)',
+  'befehl.themaAufruf': 'coop sitzung thema "<two to four words>"',
+  'befehl.themaFest': 'The tab is now called “{titel}”.',
+  'befehl.themaVonHand': 'The tab was named by hand (“{titel}”) and stays that way.',
   'befehl.unbekannt': 'Unknown command “{was}”. coop hilfe lists everything.',
   'befehl.zielUnbekannt': '“{ziel}” is neither an artifact nor a file in the project nor an address.',
   'befehl.hilfe': `coop — connects a session to the Coop Deck
@@ -690,6 +699,7 @@ export const en: Record<keyof typeof de, string> = {
   coop roadmap notiz <R-n> "<text>"            (all roadmap commands: [--artefakt <id>])
   coop rueckmeldung liste | erledigt <id> [--notiz "…"]
   coop sitzung ergebnis "<text>"
+  coop sitzung thema "<words>"                 (names the tab)
   coop uebergabe "<state>" [--offen "…"]… [--naechster "…"]
 
 Commands and flags are German words in every language of the deck: artefakt = artifact, zeigen = show,

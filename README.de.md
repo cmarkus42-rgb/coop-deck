@@ -61,6 +61,12 @@ Die App bringt ihr eigenes Node mit; der Befehl `coop` läuft darüber. Sie ist 
 
 Beim ersten Start kennt das Deck kein Projekt. „Verzeichnis hinzufügen“ nimmt ein einzelnes Projekt auf; in den Einstellungen nennt man die Ordner, in denen Projekte liegen.
 
+## Benutzen
+
+Die Anleitung steckt im Deck: Der Knopf **Anleitung** oben rechts öffnet sie als Reiter neben der Session, in der Sprache der Oberfläche. Dieselben Kapitel stehen hier: [Anleitung auf Deutsch](docs/anleitung/de/README.md), [guide in English](docs/anleitung/en/README.md).
+
+Beide entstehen aus einer Quelle (`anleitung/`). Namen von Knöpfen und die Befehlsliste werden aus den Texten der Oberfläche gefüllt, und ein Test schlägt fehl, wenn die Oberfläche etwas bekommt, das die Anleitung nicht nennt.
+
 ## Wo was liegt
 
 | Ort | Inhalt |

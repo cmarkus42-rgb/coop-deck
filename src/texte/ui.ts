@@ -21,6 +21,8 @@ export const de = {
   'ui.rueckmeldung': 'Rückmeldung',
   'ui.eingang': 'Eingang',
   'ui.diktat': 'Diktat',
+  'ui.hilfe': 'Anleitung',
+  'ui.hilfe.titel': 'Anleitung zum Deck: alles, was es kann, Schritt für Schritt',
 
   // --- Kopfzeile
   'ui.kopf.leisteTitel': 'Projektleiste ein- und ausklappen',
@@ -74,6 +76,8 @@ export const de = {
   // --- Sessions (linker Bereich)
   'ui.sitzung.frei': 'frei',
   'ui.sitzung.freiTitel': 'Ohne Rückfragen gestartet',
+  'ui.sitzung.benennen': 'Doppelklick: umbenennen',
+  'ui.sitzung.benennenFeld': 'Name des Reiters; leer lässt die Session ihn wieder setzen',
   'ui.sitzung.schlangeTitel': 'Aufträge in der Schlange',
   'ui.sitzung.ausLeiste': 'Aus der Leiste nehmen',
   'ui.sitzung.beenden': 'Session beenden',
@@ -330,6 +334,8 @@ export const en: Record<keyof typeof de, string> = {
   'ui.rueckmeldung': 'Feedback',
   'ui.eingang': 'Inbox',
   'ui.diktat': 'Dictation',
+  'ui.hilfe': 'Guide',
+  'ui.hilfe.titel': 'Guide to the deck: everything it does, step by step',
 
   // --- Header
   'ui.kopf.leisteTitel': 'Show or hide the project list',
@@ -383,6 +389,8 @@ export const en: Record<keyof typeof de, string> = {
   // --- Sessions (left pane)
   'ui.sitzung.frei': 'auto-approve',
   'ui.sitzung.freiTitel': 'Started without confirmation prompts',
+  'ui.sitzung.benennen': 'Double-click to rename',
+  'ui.sitzung.benennenFeld': 'Name of the tab; leave empty to let the session set it again',
   'ui.sitzung.schlangeTitel': 'Tasks in the queue',
   'ui.sitzung.ausLeiste': 'Remove from the tab bar',
   'ui.sitzung.beenden': 'End session',

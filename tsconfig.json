@@ -11,7 +11,11 @@
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "types": ["node"]
+    "types": ["node"],
+    "paths": {
+      "@lokal/shell": ["./src/lokal/shell.ts", "./src/shell/lokal-leer.ts"],
+      "@lokal/ui": ["./src/lokal/ui.tsx", "./src/ui/lokal-leer.tsx"]
+    }
   },
   "include": ["src", "test"]
 }

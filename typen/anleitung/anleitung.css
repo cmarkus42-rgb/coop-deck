@@ -1,0 +1,23 @@
+.hilfe { display: flex; align-items: flex-start; gap: 28px; padding: 22px 26px 60px; max-width: 1180px; }
+.hilfe nav { flex: none; width: 210px; position: sticky; top: 18px; display: flex; flex-direction: column; gap: 2px; }
+.hilfe nav a { display: block; padding: 5px 9px; color: var(--leise); text-decoration: none; border-left: 3px solid transparent; font-family: 'Pixelify Sans', sans-serif; font-size: 15px; }
+.hilfe nav a:hover { color: var(--text); }
+.hilfe nav a.aktiv { color: var(--text); background: var(--flaeche); border-left-color: var(--magenta); }
+.hilfe main { flex: 1; min-width: 0; max-width: 76ch; }
+.hilfe main h1 { margin-top: 0; }
+.hilfe main h2 { margin-top: 30px; }
+.hilfe main a { color: var(--mint); }
+.hilfe main li { margin: 3px 0; }
+.hilfe main strong { color: var(--text); }
+.hilfe main code { font-family: 'JetBrains Mono', monospace; font-size: 13px; background: var(--flaeche); padding: 1px 4px; }
+.hilfe main pre { background: var(--grund); border: 2px solid var(--kante); padding: 10px 12px; overflow-x: auto; }
+.hilfe main pre code { background: none; padding: 0; }
+.hilfe main table { border-collapse: collapse; font-size: 14px; }
+.hilfe main th, .hilfe main td { border: 2px solid var(--kante); padding: 4px 9px; text-align: left; vertical-align: top; }
+.hilfe .weiter { margin-top: 36px; padding-top: 10px; border-top: 2px solid var(--kante); display: flex; justify-content: space-between; gap: 12px; }
+@media (max-width: 760px) {
+  .hilfe { flex-direction: column; padding: 14px; gap: 14px; }
+  .hilfe nav { position: static; width: auto; flex-direction: row; flex-wrap: wrap; }
+  .hilfe nav a { border-left: 0; border-bottom: 3px solid transparent; }
+  .hilfe nav a.aktiv { border-bottom-color: var(--magenta); }
+}

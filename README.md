@@ -91,6 +91,12 @@ The app is not signed with a developer ID. On another Mac, open it the first tim
 
 On first start the deck knows no project. Add a single directory, or list the folders that contain your projects in the settings. The deck opens projects in place and copies nothing.
 
+## How to use it
+
+The guide is built into the deck: the button **Guide** at the top right opens it as a tab next to your session, in the language of the interface. The same chapters are here: [guide in English](docs/anleitung/en/README.md), [Anleitung auf Deutsch](docs/anleitung/de/README.md).
+
+Both come from one source (`anleitung/`). Names of buttons and the command list are filled in from the texts of the interface, and a test fails when the interface gains something the guide does not mention.
+
 ## Where things live
 
 | Place | Content |

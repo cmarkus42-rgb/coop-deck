@@ -153,6 +153,7 @@ select.feld { padding: 4px 6px; }
 .reiter .zu { background: none; border: 0; padding: 0 2px; cursor: pointer; color: var(--leise); font-family: 'Pixelify Sans'; font-size: 14px; }
 .reiter .zu:hover { color: var(--rot); }
 .reiter .art { font-size: 11px; color: var(--leise); }
+.reiter .name { font: inherit; color: var(--text); padding: 0 4px; min-width: 0; height: 20px; }
 .reiterleiste .plus { margin: 0 0 4px 4px; position: sticky; right: 0; flex: none; }
 
 .inhalt { flex: 1; min-height: 0; position: relative; background: var(--wanne); }
