@@ -35,7 +35,7 @@ Das Deck ist eine neue Codebasis, kein Fork. Aus cipher-mux stammen der Parser f
 
 ## Stand
 
-Version 0.0.1, gebaut und täglich benutzt von einer Person. Entwickelt unter macOS; unter Linux laufen die Kerntests in der CI, das Fenster selbst ist dort noch nicht von Hand ausprobiert. Die App ist nicht mit einer Entwickler-Kennung signiert, einen Download gibt es noch nicht: gebaut wird aus dem Quelltext.
+Version 0.0.2, gebaut und täglich benutzt von einer Person. Entwickelt unter macOS; unter Linux laufen die Kerntests in der CI, das Fenster selbst ist dort noch nicht von Hand ausprobiert. Die App ist nicht mit einer Entwickler-Kennung signiert, einen Download gibt es noch nicht: gebaut wird aus dem Quelltext.
 
 ## Starten
 

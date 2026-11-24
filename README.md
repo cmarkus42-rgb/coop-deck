@@ -54,7 +54,7 @@ The deck is a new code base, not a fork. It takes the tmux control-mode parser a
 
 ## Status
 
-Version 0.0.1, built and used daily by one person. It works for that person's projects; expect rough edges elsewhere.
+Version 0.0.2, built and used daily by one person. It works for that person's projects; expect rough edges elsewhere.
 
 - Developed on macOS. On Linux the core tests run in CI, but the window itself has not been tried by hand there yet. Windows only through WSL.
 - The app is not signed with a developer ID. There is no download yet; you build it from source.

@@ -1,6 +1,6 @@
 {
   "name": "coop-deck",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Coop Deck — a workspace for working side by side with coding CLIs: session on the left, the artefact you talk about on the right.",
   "private": true,
   "main": "dist/shell/main.js",
